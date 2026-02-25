@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCC Help Desk Toolkit — by Henry Fan</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e1117;
+  --surface: #161b27;
+  --surface2: #1e2535;
+  --surface3: #252d40;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8edf5;
+  --muted: #6b7694;
+  --accent: #3b82f6;
+  --accent2: #60a5fa;
+  --green: #22c55e;
+  --green-dim: rgba(34,197,94,0.12);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.12);
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,0.12);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.12);
+  --cyan: #22d3ee;
+  --cyan-dim: rgba(34,211,238,0.12);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.site-header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  background: rgba(14,17,23,0.95);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.header-right {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* HERO */
+.hero {
+  padding: 5rem 2rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.hero-label::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.2rem;
+}
+.hero h1 span { color: var(--accent); }
+.hero p {
+  color: var(--muted);
+  font-size: 1rem;
+  max-width: 560px;
+  margin-bottom: 2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  line-height: 1.8;
+}
+.tool-pills {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.pill:hover, .pill.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(59,130,246,0.08);
+}
+
+/* MAIN LAYOUT */
+.main { max-width: 900px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+/* TOOL SECTIONS */
+.tool-section {
+  margin-bottom: 3rem;
+  scroll-margin-top: 80px;
+}
+.tool-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.tool-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--surface3);
+  color: var(--muted);
+  padding: 4px 9px;
+  border-radius: 4px;
+  letter-spacing: 0.1em;
+}
+.tool-header h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.tool-header .tool-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* ================================
+   TOOL 1: MAC ENROLLMENT CHECKER
+================================ */
+.checklist-wrap { padding: 1.5rem; }
+
+.check-group {
+  margin-bottom: 1.5rem;
+}
+.check-group-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  user-select: none;
+}
+.check-item:hover { background: var(--surface2); }
+.check-item.pass { background: var(--green-dim); }
+.check-item.fail { background: var(--red-dim); }
+.check-item.skip { background: var(--amber-dim); opacity: 0.6; }
+
+.check-box {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border2);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  transition: all 0.15s;
+  margin-top: 1px;
+}
+.check-item.pass .check-box { background: var(--green); border-color: var(--green); color: #000; }
+.check-item.fail .check-box { background: var(--red); border-color: var(--red); color: #fff; }
+
+.check-content { flex: 1; }
+.check-label {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+.check-detail {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.check-cmd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--surface3);
+  color: var(--cyan);
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-top: 5px;
+  display: inline-block;
+  cursor: text;
+}
+.check-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+.check-item.pass .check-status { color: var(--green); }
+.check-item.fail .check-status { color: var(--red); }
+
+/* Report output */
+.report-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+}
+.report-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+.report-score span { color: var(--text); font-weight: 700; }
+.btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+}
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+.btn-ghost { background: var(--surface3); color: var(--muted); border: 1px solid var(--border2); }
+.btn-ghost:hover { color: var(--text); border-color: var(--border2); }
+.btn-green { background: var(--green); color: #000; }
+.btn-green:hover { filter: brightness(1.1); }
+
+.report-output {
+  margin: 0 1.5rem 1.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  line-height: 1.9;
+  color: var(--text);
+  white-space: pre-wrap;
+  display: none;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.report-output.visible { display: block; }
+
+/* ================================
+   TOOL 2: TICKET PATTERN ANALYZER
+================================ */
+.analyzer-wrap { padding: 1.5rem; }
+
+.input-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+.textarea-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 0.8rem 1rem;
+  resize: vertical;
+  outline: none;
+  line-height: 1.7;
+  transition: border-color 0.2s;
+  min-height: 140px;
+}
+.textarea-input:focus { border-color: var(--accent); }
+.textarea-input::placeholder { color: var(--muted); }
+
+.sample-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  text-decoration: underline;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.analyzer-controls {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 1.2rem;
+}
+.stat-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+}
+.stat-card .stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-card .stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+.stat-card.accent .stat-val { color: var(--accent); }
+.stat-card.green .stat-val { color: var(--green); }
+.stat-card.amber .stat-val { color: var(--amber); }
+.stat-card.red .stat-val { color: var(--red); }
+
+.pattern-list {
+  margin-top: 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.pattern-header {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  padding: 0.7rem 1rem;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.pattern-row {
+  display: flex;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+.pattern-row:last-child { border-bottom: none; }
+.pattern-bar-wrap { flex: 1; height: 6px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+.pattern-bar { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.pattern-cat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  width: 160px;
+  flex-shrink: 0;
+  color: var(--text);
+}
+.pattern-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.pattern-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.insight-box {
+  margin-top: 1rem;
+  background: rgba(59,130,246,0.08);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+}
+.insight-box .insight-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.insight-box ul {
+  list-style: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text);
+  line-height: 2;
+}
+.insight-box ul li::before { content: '→ '; color: var(--accent); }
+
+/* ================================
+   TOOL 3: TRIAGE DECISION TREE
+================================ */
+.triage-wrap { padding: 1.5rem; }
+
+.system-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+.sys-tab {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 5px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--surface2);
+}
+.sys-tab:hover { border-color: var(--accent); color: var(--accent); }
+.sys-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+.tree-panel { display: none; }
+.tree-panel.active { display: block; }
+
+.node {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 8px;
+  position: relative;
+}
+.node.question { border-left: 3px solid var(--accent); }
+.node.fix { border-left: 3px solid var(--green); }
+.node.escalate { border-left: 3px solid var(--red); }
+.node.info { border-left: 3px solid var(--amber); }
+
+.node-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.node.question .node-type { color: var(--accent); }
+.node.fix .node-type { color: var(--green); }
+.node.escalate .node-type { color: var(--red); }
+.node.info .node-type { color: var(--amber); }
+
+.node-text { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.node-detail {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.node-cmd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--bg);
+  color: var(--cyan);
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-top: 5px;
+  display: inline-block;
+}
+
+.branch-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.branch-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 5px;
+  border: 1px solid var(--border2);
+  background: var(--surface3);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.branch-btn:hover { border-color: var(--accent); color: var(--accent); }
+.branch-btn.yes { border-color: var(--green); color: var(--green); }
+.branch-btn.yes:hover { background: var(--green-dim); }
+.branch-btn.no { border-color: var(--red); color: var(--red); }
+.branch-btn.no:hover { background: var(--red-dim); }
+
+.tree-history {
+  margin-bottom: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.history-crumb {
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: underline;
+}
+.history-crumb:hover { color: var(--accent); }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+footer a { color: var(--accent); text-decoration: none; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+@media(max-width:600px){
+  .hero{padding:3rem 1.2rem 2rem}
+  .main{padding:0 1.2rem 4rem}
+  .report-bar{flex-direction:column;gap:.8rem;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="logo">CCC · Help Desk Toolkit</span>
+  <span class="header-right">by Henry Fan · fansofhenry.github.io</span>
+</header>
+
+<div class="hero">
+  <div class="hero-label">Open Source · California Community Colleges</div>
+  <h1>Help Desk<br><span>Diagnostic Toolkit</span></h1>
+  <p>Three browser-based tools built for CCC ETS teams. No install. No login. Works offline after first load. Built by someone who's been on both sides of the help desk at Foothill and Skyline.</p>
+  <div class="tool-pills">
+    <a href="#tool1" class="pill">01 · Mac Enrollment Checker</a>
+    <a href="#tool2" class="pill">02 · Ticket Pattern Analyzer</a>
+    <a href="#tool3" class="pill">03 · System Triage Guide</a>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ========== TOOL 1 ========== -->
+  <div class="tool-section" id="tool1">
+    <div class="tool-header">
+      <span class="tool-number">01</span>
+      <h2>Mac Enrollment Checker</h2>
+      <span class="tool-desc">Jamf MDM · ADE · macOS</span>
+    </div>
+    <div class="card">
+      <div class="checklist-wrap">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:1.2rem">Click each item as you check it. Click once for PASS ✓, twice for FAIL ✗, three times to clear. Generate a full incident report when done.</p>
+
+        <div class="check-group">
+          <div class="check-group-title">Phase 1 — Local Device Checks</div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="Self Service app present in /Applications" data-detail="If missing, Jamf enrollment never completed" data-cmd="ls /Applications | grep 'Self Service'">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">Self Service app present in /Applications</div>
+              <div class="check-detail">If missing, Jamf enrollment never completed</div>
+              <div class="check-cmd">ls /Applications | grep 'Self Service'</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="MDM profile present in System Settings" data-detail="System Settings → Privacy & Security → Profiles. If no district profile listed, device is unmanaged." data-cmd="">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">MDM profile in System Settings → Privacy & Security → Profiles</div>
+              <div class="check-detail">If no district profile listed, device is unmanaged</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="Jamf binary installed" data-detail="If not present, device was never enrolled or was wiped" data-cmd="which jamf || /usr/local/bin/jamf version">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">Jamf binary installed</div>
+              <div class="check-detail">If not present, device was never enrolled or was wiped</div>
+              <div class="check-cmd">which jamf</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="Serial number matches Apple School Manager record" data-detail="Confirm device is assigned to your institution in ASM/ADE" data-cmd="system_profiler SPHardwareDataType | grep Serial">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">Serial number confirmed in Apple School Manager</div>
+              <div class="check-detail">Get serial: system_profiler SPHardwareDataType — then verify in ASM/ADE console that it's assigned to your district</div>
+              <div class="check-cmd">system_profiler SPHardwareDataType | grep Serial</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+        </div>
+
+        <div class="check-group">
+          <div class="check-group-title">Phase 2 — Network & Connectivity</div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="Device can reach Jamf Pro server" data-detail="Replace with your district's Jamf URL" data-cmd="ping -c 3 jamf.fhda.edu">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">Device can reach Jamf Pro server</div>
+              <div class="check-detail">Replace hostname with your district's Jamf URL</div>
+              <div class="check-cmd">ping -c 3 [your-jamf-server]</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="Port 443 open to Jamf server" data-detail="Jamf requires HTTPS (443). Blocked port = enrollment stall." data-cmd="nc -zv [jamf-server] 443">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">Port 443 open to Jamf server</div>
+              <div class="check-detail">Jamf requires HTTPS (443). Blocked port = enrollment stall.</div>
+              <div class="check-cmd">nc -zv [jamf-server] 443</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="Apple MDM push endpoints reachable" data-detail="Required: albert.apple.com, deviceenrollment.apple.com, mdmenrollment.apple.com" data-cmd="curl -I https://albert.apple.com">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">Apple MDM push endpoints reachable</div>
+              <div class="check-detail">albert.apple.com · deviceenrollment.apple.com · mdmenrollment.apple.com</div>
+              <div class="check-cmd">curl -I https://albert.apple.com</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+        </div>
+
+        <div class="check-group">
+          <div class="check-group-title">Phase 3 — Re-Enrollment Steps (if Phase 1 or 2 failed)</div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="Attempted sudo jamf enroll" data-detail="If binary is present but profile is missing, a manual re-enroll may succeed" data-cmd="sudo jamf enroll -invitation [code]">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">Attempted manual re-enroll</div>
+              <div class="check-detail">If binary present but profile missing, manual re-enroll may succeed</div>
+              <div class="check-cmd">sudo jamf enroll</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="Verified ADE assignment in Apple School Manager" data-detail="Device must be assigned to the correct MDM server in ASM before ADE re-enrollment will work">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">ADE assignment verified in Apple School Manager console</div>
+              <div class="check-detail">Device must be assigned to the correct MDM server in ASM before ADE re-enrollment will work</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="Re-ran Setup Assistant (Erase All Content if needed)" data-detail="Last resort: System Settings → General → Transfer or Reset → Erase All Content and Settings">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">Re-ran Setup Assistant / Factory reset initiated</div>
+              <div class="check-detail">Last resort: System Settings → General → Transfer or Reset → Erase All Content. Confirm data is backed up first.</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+          <div class="check-item" onclick="cycleCheck(this)" data-label="Network drive mapped after enrollment" data-detail="Should auto-map via login script/profile on successful enrollment. If not, check AD binding and user home drive path.">
+            <div class="check-box"></div>
+            <div class="check-content">
+              <div class="check-label">Network drive mapped after successful enrollment</div>
+              <div class="check-detail">Should auto-map via login script on enrollment. If not: check AD binding + user's home drive path in AD.</div>
+            </div>
+            <div class="check-status"></div>
+          </div>
+        </div>
+
+        <div id="report-field-wrap" style="padding:0 0 0.5rem">
+          <div class="input-label" style="margin:0 0 0.4rem">Device / User / Ticket # (optional — appears in report)</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input type="text" id="rpt-device" placeholder="Device serial or hostname" style="background:var(--bg);border:1px solid var(--border2);border-radius:5px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 10px;outline:none;flex:1;min-width:160px">
+            <input type="text" id="rpt-user" placeholder="User name" style="background:var(--bg);border:1px solid var(--border2);border-radius:5px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 10px;outline:none;flex:1;min-width:120px">
+            <input type="text" id="rpt-ticket" placeholder="Ticket #" style="background:var(--bg);border:1px solid var(--border2);border-radius:5px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 10px;outline:none;width:100px">
+          </div>
+        </div>
+      </div>
+
+      <div id="enrollment-report" class="report-output"></div>
+
+      <div class="report-bar">
+        <div class="report-score">Checked: <span id="check-score">0 / 10</span></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="resetChecklist()">Reset</button>
+          <button class="btn btn-primary" onclick="generateReport()">Generate Incident Report</button>
+          <button class="btn btn-green" id="copy-report-btn" onclick="copyReport()" style="display:none">Copy Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TOOL 2 ========== -->
+  <div class="tool-section" id="tool2">
+    <div class="tool-header">
+      <span class="tool-number">02</span>
+      <h2>Ticket Pattern Analyzer</h2>
+      <span class="tool-desc">Python-style analysis · in your browser</span>
+    </div>
+    <div class="card">
+      <div class="analyzer-wrap">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:1rem">Paste ticket descriptions (one per line) or use the sample data. The analyzer surfaces categories, patterns, and automation candidates — the same analysis I ran with Python/pandas at Faraday Future, now in a browser.</p>
+
+        <div class="input-label">Ticket descriptions — one per line</div>
+        <textarea class="textarea-input" id="ticket-input" placeholder="Canvas login failed&#10;SSO loop on MyPortal&#10;Printer not found after Windows update&#10;Banner won't open SPAIDEN form&#10;..."></textarea>
+        <button class="sample-btn" onclick="loadSample()">↓ Load sample CCC ticket data (30 tickets)</button>
+
+        <div class="analyzer-controls">
+          <button class="btn btn-primary" onclick="analyzeTickets()">Analyze Patterns</button>
+          <button class="btn btn-ghost" onclick="clearAnalysis()">Clear</button>
+        </div>
+
+        <div id="analysis-results" style="display:none">
+          <div class="results-grid" id="stats-grid"></div>
+          <div class="pattern-list" id="pattern-list"></div>
+          <div class="insight-box" id="insight-box"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TOOL 3 ========== -->
+  <div class="tool-section" id="tool3">
+    <div class="tool-header">
+      <span class="tool-number">03</span>
+      <h2>System Triage Guide</h2>
+      <span class="tool-desc">Interactive decision trees · CCC-specific</span>
+    </div>
+    <div class="card">
+      <div class="triage-wrap">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:1rem">Select a system. Follow the decision tree. Each path ends with either a fix or an escalation with the right context to hand off.</p>
+        <div class="system-tabs">
+          <div class="sys-tab active" onclick="setSystem('sso',this)">SSO / MyPortal</div>
+          <div class="sys-tab" onclick="setSystem('canvas',this)">Canvas LMS</div>
+          <div class="sys-tab" onclick="setSystem('banner',this)">Banner ERP</div>
+          <div class="sys-tab" onclick="setSystem('jamf',this)">Jamf / Mac</div>
+          <div class="sys-tab" onclick="setSystem('network',this)">Network</div>
+        </div>
+        <div id="tree-history" class="tree-history"></div>
+        <div id="tree-display"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<footer>
+  <span>Henry Fan · <a href="https://fansofhenry.github.io/AppAnalyst" target="_blank">fansofhenry.github.io</a> · Built for CCC ETS Teams</span>
+  <span>MIT License · Contributions welcome</span>
+</footer>
+
+<script>
+// ================================
+// TOOL 1: CHECKLIST LOGIC
+// ================================
+function cycleCheck(el) {
+  const states = ['', 'pass', 'fail'];
+  const icons = ['', '✓', '✗'];
+  const texts = ['', 'PASS', 'FAIL'];
+  let cur = states.indexOf(el.dataset.state || '');
+  cur = (cur + 1) % states.length;
+  el.dataset.state = states[cur];
+  el.className = 'check-item ' + states[cur];
+  el.querySelector('.check-box').textContent = icons[cur];
+  el.querySelector('.check-status').textContent = texts[cur];
+  updateScore();
+}
+
+function updateScore() {
+  const items = document.querySelectorAll('.check-item');
+  const checked = document.querySelectorAll('.check-item.pass, .check-item.fail').length;
+  document.getElementById('check-score').textContent = checked + ' / ' + items.length;
+}
+
+function resetChecklist() {
+  document.querySelectorAll('.check-item').forEach(el => {
+    el.dataset.state = '';
+    el.className = 'check-item';
+    el.querySelector('.check-box').textContent = '';
+    el.querySelector('.check-status').textContent = '';
+  });
+  document.getElementById('enrollment-report').classList.remove('visible');
+  document.getElementById('copy-report-btn').style.display = 'none';
+  updateScore();
+}
+
+function generateReport() {
+  const now = new Date();
+  const ts = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  const device = document.getElementById('rpt-device').value || '[device not specified]';
+  const user = document.getElementById('rpt-user').value || '[user not specified]';
+  const ticket = document.getElementById('rpt-ticket').value || '[no ticket #]';
+
+  const items = document.querySelectorAll('.check-item');
+  let passLines = [], failLines = [], uncheckedLines = [];
+  items.forEach(el => {
+    const lbl = el.dataset.label;
+    const state = el.dataset.state || '';
+    if (state === 'pass') passLines.push('  ✓ ' + lbl);
+    else if (state === 'fail') failLines.push('  ✗ ' + lbl);
+    else uncheckedLines.push('  — ' + lbl);
+  });
+
+  const rec = failLines.length > 0
+    ? 'RECOMMENDATION: Re-enrollment required. ' + (failLines.some(l=>l.includes('ADE')||l.includes('profile')) ? 'Verify ADE assignment in Apple School Manager, then wipe and re-run Setup Assistant.' : 'Run sudo jamf enroll; if unsuccessful, escalate to Senior CSS with this report.')
+    : passLines.length === items.length
+      ? 'RECOMMENDATION: All checks passed. Monitor for 30 min post-enrollment; verify Self Service populates district software.'
+      : 'RECOMMENDATION: Diagnosis incomplete. Continue checking remaining items.';
+
+  const report = [
+    '═══════════════════════════════════════════',
+    '  MAC ENROLLMENT DIAGNOSTIC REPORT',
+    '═══════════════════════════════════════════',
+    '  Date/Time : ' + ts,
+    '  Technician: Henry Fan',
+    '  Device    : ' + device,
+    '  User      : ' + user,
+    '  Ticket #  : ' + ticket,
+    '───────────────────────────────────────────',
+    '',
+    'PASSED CHECKS (' + passLines.length + '):',
+    ...(passLines.length ? passLines : ['  (none)']),
+    '',
+    'FAILED CHECKS (' + failLines.length + '):',
+    ...(failLines.length ? failLines : ['  (none)']),
+    '',
+    'NOT CHECKED (' + uncheckedLines.length + '):',
+    ...(uncheckedLines.length ? uncheckedLines : ['  (none)']),
+    '',
+    '───────────────────────────────────────────',
+    rec,
+    '═══════════════════════════════════════════',
+  ].join('\n');
+
+  const out = document.getElementById('enrollment-report');
+  out.textContent = report;
+  out.classList.add('visible');
+  document.getElementById('copy-report-btn').style.display = 'inline-block';
+  out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function copyReport() {
+  const text = document.getElementById('enrollment-report').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-report-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy Report', 1800);
+  });
+}
+
+// ================================
+// TOOL 2: TICKET ANALYZER
+// ================================
+const SAMPLE_TICKETS = `Canvas login failed for student
+SSO loop on MyPortal after password reset
+Printer not found on Windows 11 after update
+Banner SPAIDEN form won't open
+Zoom won't launch on MacBook
+SSO infinite loop
+Canvas course not showing - just registered
+Projector no signal in room 4210
+Printer spooler stuck, jobs queued
+Banner access denied - financial aid form
+Canvas login error
+Network drive not mapped on new Mac
+Self Service app missing on MacBook
+Printer offline after IP change
+VDI session lagging from home
+SSO token expired - infinite redirect
+Canvas not in list - enrolled yesterday
+Banner keeps crashing on Chrome
+MFA - locked out after new phone
+Printer scan to email broken
+Canvas password reset loop
+Zoom audio not working
+Banner security class error
+Printer driver mismatch after macOS update
+SSO failing with 401 error
+Mac won't enroll in Jamf
+Canvas course unpublished
+VDI profile not mounting
+Printer paper jam sensor error
+Banner VPN disconnecting remote staff`;
+
+function loadSample() {
+  document.getElementById('ticket-input').value = SAMPLE_TICKETS;
+}
+
+const CATEGORIES = [
+  { name: 'SSO / Authentication', keywords: ['sso','login','saml','token','portal','myportal','okta','auth','password','mfa','locked','redirect','401'] },
+  { name: 'Canvas LMS', keywords: ['canvas','course','lms','enrolled','enroll','publish','blackboard'] },
+  { name: 'Banner ERP', keywords: ['banner','spaiden','financial aid','form','oracle','security class','rraareq'] },
+  { name: 'Printer / Scanner', keywords: ['printer','print','scanner','scan','spooler','driver','paper jam','toner','copier','ip change'] },
+  { name: 'Mac / Jamf', keywords: ['mac','macbook','jamf','self service','mdm','enrollment','enroll','apple','macos'] },
+  { name: 'Network / VPN', keywords: ['network','vpn','drive','mapping','wi-fi','wifi','wireless','vpn','wired','ip','globalprotect'] },
+  { name: 'VDI / Virtual Desktop', keywords: ['vdi','virtual','horizon','azure','profile','session','remote desktop','rdp','blast','pcoip'] },
+  { name: 'Video / Multimedia', keywords: ['zoom','projector','teams','meet','video','hdmi','display','signal','audio','camera','microphone'] },
+  { name: 'Other', keywords: [] },
+];
+
+const COLORS = ['#3b82f6','#22c55e','#f59e0b','#ef4444','#a78bfa','#22d3ee','#f97316','#ec4899'];
+
+function analyzeTickets() {
+  const raw = document.getElementById('ticket-input').value.trim();
+  if (!raw) return;
+  const tickets = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  if (tickets.length === 0) return;
+
+  const counts = {};
+  CATEGORIES.forEach(c => counts[c.name] = 0);
+
+  tickets.forEach(t => {
+    const lower = t.toLowerCase();
+    let matched = false;
+    for (let i = 0; i < CATEGORIES.length - 1; i++) {
+      if (CATEGORIES[i].keywords.some(k => lower.includes(k))) {
+        counts[CATEGORIES[i].name]++;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) counts['Other']++;
+  });
+
+  const sorted = Object.entries(counts).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]);
+  const total = tickets.length;
+  const topCat = sorted[0];
+  const topPct = Math.round(topCat[1] / total * 100);
+
+  // Stats
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card accent"><div class="stat-val">${total}</div><div class="stat-label">Total tickets</div></div>
+    <div class="stat-card green"><div class="stat-val">${sorted.length}</div><div class="stat-label">Categories found</div></div>
+    <div class="stat-card amber"><div class="stat-val">${topPct}%</div><div class="stat-label">Top category: ${topCat[0]}</div></div>
+    <div class="stat-card red"><div class="stat-val">${sorted.filter(([,v]) => v/total > 0.15).length}</div><div class="stat-label">High-volume categories (>15%)</div></div>
+  `;
+
+  // Bar chart
+  let bars = '<div class="pattern-header">Category Breakdown</div>';
+  sorted.forEach(([name, count], i) => {
+    const pct = Math.round(count / total * 100);
+    const color = COLORS[i % COLORS.length];
+    bars += `<div class="pattern-row">
+      <div class="pattern-cat">${name}</div>
+      <div class="pattern-bar-wrap"><div class="pattern-bar" style="width:${pct}%;background:${color}"></div></div>
+      <div class="pattern-count" style="color:${color}">${count}</div>
+      <div class="pattern-pct">${pct}%</div>
+    </div>`;
+  });
+  document.getElementById('pattern-list').innerHTML = bars;
+
+  // Insights
+  const highVol = sorted.filter(([,v]) => v/total >= 0.15);
+  const automationCandidates = sorted.filter(([name,v]) =>
+    v >= 3 && ['SSO / Authentication','Printer / Scanner','Mac / Jamf','Canvas LMS'].includes(name)
+  );
+  let insights = [];
+  if (highVol.length > 0) insights.push(`${highVol.map(([n,v])=>`${n} (${Math.round(v/total*100)}%)`).join(', ')} — high volume, investigate for systemic root cause`);
+  if (automationCandidates.length > 0) insights.push(`Automation candidates: ${automationCandidates.map(([n])=>n).join(', ')} — consider KB articles, self-service flows, or scripted fixes`);
+  if (counts['SSO / Authentication'] / total > 0.2) insights.push('SSO volume >20% — check for recent password policy change, clock skew, or Okta issue');
+  if (counts['Printer / Scanner'] / total > 0.1) insights.push('Printer volume elevated — check for recent OS update or IP changes affecting print queues');
+  if (counts['Mac / Jamf'] / total > 0.1) insights.push('Jamf/Mac volume elevated — check ADE assignment batch or recent macOS update compatibility');
+
+  document.getElementById('insight-box').innerHTML = `
+    <div class="insight-title">→ ANALYST INSIGHTS</div>
+    <ul>${insights.map(i => `<li>${i}</li>`).join('')}</ul>
+  `;
+
+  document.getElementById('analysis-results').style.display = 'block';
+  document.getElementById('analysis-results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.pattern-bar').forEach(b => b.style.width = b.style.width);
+  }, 50);
+}
+
+function clearAnalysis() {
+  document.getElementById('ticket-input').value = '';
+  document.getElementById('analysis-results').style.display = 'none';
+}
+
+// ================================
+// TOOL 3: DECISION TREES
+// ================================
+const TREES = {
+  sso: {
+    start: 'q1',
+    nodes: {
+      q1: { type:'question', text:'Can the user reach other websites normally?', detail:'Tests whether this is network-wide or SSO-specific', yes:'q2', no:'net' },
+      net: { type:'escalate', text:'Network issue — not SSO', detail:'User has no internet access. Escalate to network team with: device type, building/room, wired or wireless, time started.', fix:null },
+      q2: { type:'question', text:'Does the issue resolve in Incognito / Private mode?', detail:'Incognito bypasses cached session cookies and local storage — the most common SSO failure cause', yes:'fix-cache', no:'q3' },
+      'fix-cache': { type:'fix', text:'Browser cache / stale session cookie', detail:'Fix: Have user clear browser cache and cookies, or set browser to clear on close. Chrome: Settings → Privacy → Clear browsing data. This resolves ~80% of SSO loop reports.', fix:'Clear browser cache & cookies · Chrome: Ctrl+Shift+Del · macOS: Cmd+Shift+Del' },
+      q3: { type:'question', text:'Is the user\'s device clock within 5 minutes of actual time?', detail:'SAML tokens are time-sensitive. Clock skew >5 min causes silent authentication failures.', yes:'q4', no:'fix-clock' },
+      'fix-clock': { type:'fix', text:'Clock skew — SAML token failure', detail:'Fix: Sync device time. Windows: right-click clock → Adjust date/time → Sync now. Mac: System Settings → General → Date & Time → Set automatically. This is one of the most commonly missed SSO fixes.', fix:'Sync device clock to network time' },
+      q4: { type:'question', text:'Is the user\'s AD account locked or disabled?', detail:'Check in Active Directory Users & Computers or via PowerShell', yes:'fix-ad', no:'q5' },
+      'fix-ad': { type:'fix', text:'AD account locked or disabled', detail:'Fix: Unlock account in AD (right-click user → Unlock). Note: password reset and account unlock are different operations with different audit implications — use the correct one.', fix:'AD: Unlock account or reset password as appropriate · Document which action was taken' },
+      q5: { type:'question', text:'Are multiple users reporting the same issue at the same time?', detail:'Simultaneous failures across users = systemic issue, not user-specific', yes:'esc-saml', no:'fix-single' },
+      'fix-single': { type:'fix', text:'Isolated user issue — try re-enrollment', detail:'Single user, cache cleared, clock synced, account active. Next: have user try a different browser. If still failing, check Okta logs for this specific user for 401/403 errors.', fix:'Check Okta/SAML logs for specific user · Try different browser · Re-provision MFA if needed' },
+      'esc-saml': { type:'escalate', text:'Systemic SSO failure — escalate to infrastructure team', detail:'Escalate with: number of users affected, start time, specific error message (401/403/500), whether campus-wide or building-specific. Check status.okta.com before escalating.', fix:'Escalate to Senior CSS / network team with: user count, start time, error codes, scope' },
+    }
+  },
+  canvas: {
+    start: 'q1',
+    nodes: {
+      q1: { type:'question', text:'Can the user log into Canvas at all?', detail:'Tests whether this is authentication or enrollment/access', yes:'q2', no:'sso-ref' },
+      'sso-ref': { type:'info', text:'SSO / Login failure — use SSO Triage tab', detail:'Canvas login is handled via SSO. Switch to the SSO / MyPortal triage tree for authentication failures.' },
+      q2: { type:'question', text:'Is the user reporting a missing course?', detail:'Most common Canvas report: "I registered but my class isn\'t there"', yes:'q3', no:'q6' },
+      q3: { type:'question', text:'Did the user register within the last 6 hours?', detail:'Banner → Canvas sync runs in batches, typically every 4–6 hours. New registrations are not instant.', yes:'fix-wait', no:'q4' },
+      'fix-wait': { type:'fix', text:'Banner → Canvas sync latency', detail:'Normal behavior. The Banner-to-Canvas API sync runs on a batch schedule (typically every 4–6 hours). Advise the user to check again in a few hours. If still missing after 24 hours, escalate.', fix:'Advise user to wait 4–6 hours · If 24+ hrs have passed, escalate with student ID and course CRN' },
+      q4: { type:'question', text:'Is the course published by the instructor?', detail:'Instructors must manually publish courses in Canvas. Unpublished courses are invisible to students.', yes:'q5', no:'fix-publish' },
+      'fix-publish': { type:'fix', text:'Course not published', detail:'Contact the instructor directly. The course exists in Canvas but is in draft/unpublished state. Instructor must go to Canvas → Course → Home → Publish. ETS cannot publish on the instructor\'s behalf without their authorization.', fix:'Contact instructor to publish course · ETS cannot publish without instructor authorization' },
+      q5: { type:'question', text:'Is the user enrolled in the correct section? Check for cross-listed courses.', detail:'Courses can be cross-listed under a parent section. Student may be looking at the wrong CRN.', yes:'esc-canvas', no:'fix-cross' },
+      'fix-cross': { type:'fix', text:'Cross-listed course — check parent section', detail:'The student may be enrolled in a section that has been merged into a parent course. Have them look for the parent course ID, or ask the instructor which Canvas shell is being used.', fix:'Check for parent course ID · Confirm with instructor which Canvas shell is active' },
+      'esc-canvas': { type:'escalate', text:'Escalate to Canvas admin / Instructional Technology', detail:'User is enrolled, sync has run, course is published, correct section — and still missing. This requires a Banner-Canvas integration investigation at the admin level.', fix:'Escalate with: student ID, course CRN, registration date, screenshot of Canvas course list' },
+      q6: { type:'question', text:'Is the user getting an error message? If so, what is it?', detail:'Common errors: 403 Unauthorized · Course Unavailable · Error occurred while communicating', yes:'q7', no:'fix-generic' },
+      q7: { type:'fix', text:'Document the error and check course access rules', detail:'403 = enrollment/permissions issue. "Course Unavailable" = course has date restrictions or is restricted. "Error communicating" = may be a Canvas platform issue — check status.instructure.com.', fix:'Check status.instructure.com · For 403: verify enrollment · For date restrictions: contact instructor' },
+      'fix-generic': { type:'fix', text:'Generic Canvas issue — standard browser fixes', detail:'Have user: clear cache, try Incognito, try a different browser (Canvas works best in Chrome or Firefox). If the issue persists across browsers, document and escalate.', fix:'Clear cache → Incognito → Different browser → If persistent, document and escalate' },
+    }
+  },
+  banner: {
+    start: 'q1',
+    nodes: {
+      q1: { type:'question', text:'Can the user log into Banner at all?', detail:'Tests whether this is authentication or a form/permissions issue', yes:'q2', no:'q-vpn' },
+      'q-vpn': { type:'question', text:'Is the user working remotely?', detail:'Banner admin pages are typically not public-facing — remote staff require VPN', yes:'fix-vpn', no:'q-ad' },
+      'fix-vpn': { type:'fix', text:'VPN not connected', detail:'Remote staff must be connected to GlobalProtect (or district VPN) to access Banner. Have user connect to VPN and retry.', fix:'Connect to GlobalProtect VPN → Retry Banner login' },
+      'q-ad': { type:'question', text:'Is the AD account active and unlocked?', detail:'Check AD lockoutTime and account status', yes:'esc-banner-login', no:'fix-ad' },
+      'fix-ad': { type:'fix', text:'AD account issue', detail:'Unlock or reset account in Active Directory. Banner login is tied to AD/LDAP credentials.', fix:'Unlock AD account · If new user, confirm account was provisioned correctly' },
+      'esc-banner-login': { type:'escalate', text:'Escalate Banner login failure to Senior CSS / Banner admin', detail:'Account is active, VPN is connected, still cannot login. This requires Banner admin investigation.', fix:'Escalate with: username, error message, screenshot, whether issue is browser-specific' },
+      q2: { type:'question', text:'Can the user log in but not access a specific form or function?', detail:'Login works but something is missing or inaccessible = permissions issue, not login issue', yes:'fix-security-class', no:'q3' },
+      'fix-security-class': { type:'fix', text:'Banner security class / permissions issue', detail:'If a user can login but cannot see a specific Banner form (e.g. SPAIDEN, RRAAREQ), it is a Banner security class configuration issue — not a hardware or browser problem. The correct fix is an update to the user\'s Banner security class. Document which form is inaccessible and escalate to Banner admin.', fix:'Document: which form is inaccessible + user role → Escalate to Banner admin for security class update' },
+      q3: { type:'question', text:'Is Banner crashing or loading very slowly?', detail:'Performance issues are usually browser compatibility or network', yes:'q4', no:'fix-other' },
+      q4: { type:'question', text:'What browser is the user using?', detail:'Banner Admin Pages have known issues with Safari. Chrome or Firefox recommended.', yes:'fix-browser', no:'fix-browser' },
+      'fix-browser': { type:'fix', text:'Browser compatibility issue', detail:'Older Banner (Admin Pages / INB) is sensitive to browser and Java versions. Switch to Chrome or Firefox. Avoid Safari for Banner. If on Firefox, check for recent updates that may have broken Java compatibility.', fix:'Switch to Chrome or Firefox · Clear cache · If Java-based form: verify Java version compatibility' },
+      'fix-other': { type:'fix', text:'Document and test systematically', detail:'Test whether the issue is: user-specific, machine-specific, or browser-specific. Try logging in as the user from a known-good machine. If the issue follows the user, it\'s account/permissions. If it follows the machine, it\'s configuration.', fix:'Test on different machine → If issue follows user = permissions → If follows machine = configuration' },
+    }
+  },
+  jamf: {
+    start: 'q1',
+    nodes: {
+      q1: { type:'question', text:'Is Self Service present in /Applications?', detail:'Self Service is the primary indicator of successful Jamf enrollment', yes:'q2', no:'fix-enroll' },
+      'fix-enroll': { type:'fix', text:'Enrollment incomplete — Self Service missing', detail:'Device never completed Jamf enrollment. First: check if the Jamf binary exists (which jamf). If it does, try sudo jamf enroll. If not, device needs full re-enrollment via ADE.', fix:'which jamf → sudo jamf enroll → If fails: verify ADE assignment in Apple School Manager → Wipe and re-run Setup Assistant' },
+      q2: { type:'question', text:'Are MDM profiles visible in System Settings → Privacy & Security → Profiles?', detail:'If no district profiles are listed, the device lost management', yes:'q3', no:'fix-profile' },
+      'fix-profile': { type:'fix', text:'Management profiles missing', detail:'Device has Self Service but lost its management profiles — this can happen after a macOS major update or if the device was accidentally unenrolled. Run sudo jamf enroll to re-push profiles, or re-enroll via Jamf Pro console.', fix:'sudo jamf enroll · Or: Jamf Pro console → device record → Re-enroll device' },
+      q3: { type:'question', text:'Is district software deploying via Self Service?', detail:'If profiles are present but software isn\'t showing, check Jamf scope/group membership', yes:'q4', no:'fix-scope' },
+      'fix-scope': { type:'fix', text:'Software not scoped to this device or user', detail:'The device is enrolled and managed, but the software policies aren\'t being pushed. Check in Jamf Pro: is the device in the correct static/smart group? Is the policy scoped to that group? Does the user\'s AD group match the Jamf scope?', fix:'Jamf Pro: check device group membership → verify policy scope → run sudo jamf policy to force check-in' },
+      q4: { type:'question', text:'Is the network drive mapping correctly after login?', detail:'Drive mapping should happen via login script or configuration profile on enrollment', yes:'resolve', no:'fix-drive' },
+      'fix-drive': { type:'fix', text:'Network drive not mapping', detail:'Check: 1) Is the Mac bound to AD? (dsconfigad -show) 2) Is the user\'s home drive path set in AD? 3) Is the login script/configuration profile deploying correctly? Run sudo jamf policy to force a config push.', fix:'dsconfigad -show → Check AD home drive path → sudo jamf policy → If still failing: check login script in Jamf policy' },
+      'resolve': { type:'fix', text:'Enrollment appears healthy', detail:'Self Service present, profiles installed, software deploying, drive mapping correctly. If user has a specific issue, document the symptom and check Jamf Pro logs for that device for recent policy failures.', fix:'Check Jamf Pro device log for recent errors · Run: sudo jamf recon to refresh inventory' },
+    }
+  },
+  network: {
+    start: 'q1',
+    nodes: {
+      q1: { type:'question', text:'Can the user reach any websites at all?', detail:'Tests total connectivity vs. specific site/service failure', yes:'q2', no:'q-physical' },
+      'q-physical': { type:'question', text:'Is there a physical link light on the network port or is Wi-Fi connected?', detail:'Layer 1 — physical connection check', yes:'q-ip', no:'fix-physical' },
+      'fix-physical': { type:'fix', text:'Physical connection failure', detail:'No link light = cable, port, or NIC issue. Try: different cable, different wall port, confirm NIC is seated. For wireless: forget and rejoin the network.', fix:'Try different cable → Different wall port → Confirm Wi-Fi signal strength → Check NIC in Device Manager' },
+      'q-ip': { type:'question', text:'Does the device have a valid IP? (Not 169.254.x.x)', detail:'169.254.x.x = APIPA = DHCP failed. Run ipconfig /all (Windows) or ifconfig (Mac)', yes:'q-gateway', no:'fix-dhcp' },
+      'fix-dhcp': { type:'fix', text:'DHCP failure — no valid IP assigned', detail:'Device has APIPA address (169.254.x.x) — DHCP server did not respond. Try: ipconfig /release then /renew (Windows). If persists, may be VLAN or DHCP server issue — escalate to network team.', fix:'ipconfig /release && ipconfig /renew · If persists: escalate to network team with MAC address and switchport' },
+      'q-gateway': { type:'question', text:'Can the device ping its default gateway?', detail:'ping [gateway IP] — if this fails, the problem is between the device and the local switch', yes:'q-dns', no:'fix-routing' },
+      'fix-routing': { type:'fix', text:'Cannot reach gateway — local network issue', detail:'Device has an IP but cannot reach the gateway. This is typically a VLAN misconfiguration, a bad switchport, or a routing issue. Escalate to network team with: device IP, gateway IP, building/room, switchport if known.', fix:'Escalate to network team: device IP, gateway, building, switchport, whether wired or wireless' },
+      'q-dns': { type:'question', text:'Can the device resolve DNS? (nslookup google.com)', detail:'Ping 8.8.8.8 first — if that works but DNS doesn\'t, it\'s a DNS issue', yes:'q2', no:'fix-dns' },
+      'fix-dns': { type:'fix', text:'DNS resolution failure', detail:'Can reach internet by IP (8.8.8.8) but not by name. Fix: flush DNS cache (ipconfig /flushdns on Windows, sudo dscacheutil -flushcache on Mac). If persists, manually set DNS to 8.8.8.8 to test, then report to network team.', fix:'ipconfig /flushdns (Win) · sudo dscacheutil -flushcache (Mac) · Test with manual DNS 8.8.8.8' },
+      q2: { type:'question', text:'Is the issue limited to a specific application or website?', detail:'General connectivity works — app or site-specific failure', yes:'fix-app', no:'q3' },
+      'fix-app': { type:'fix', text:'Application or site-specific issue', detail:'Check: is it the app or the browser? (test in Incognito). Check vendor status page for known outages. For district apps (Canvas, Banner): check ETS status page. Document: error message, browser, time started.', fix:'Check vendor status page · Test in Incognito · Different browser · If district app: check ETS status page' },
+      q3: { type:'question', text:'Are multiple users in the same building or room affected?', detail:'Multi-user same location = infrastructure issue, not device issue', yes:'esc-network', no:'fix-single' },
+      'esc-network': { type:'escalate', text:'Escalate to network team — infrastructure issue', detail:'Multiple users, same location = switch, AP, or VLAN problem. Do not attempt to touch network equipment. Escalate with: affected floor/building, number of users, start time, wired vs wireless, speed test results.', fix:'Escalate: floor/building, user count, start time, wired or wireless, speed test results from affected area' },
+      'fix-single': { type:'fix', text:'Single-user, full connectivity issue', detail:'User has IP, can reach gateway, DNS works, but still reports general slowness or intermittent failures. Check: background processes consuming bandwidth, VPN performance, ISP issue if remote worker.', fix:'Task Manager → network usage · If remote: ISP speed test · Check VPN split-tunnel configuration' },
+    }
+  }
+};
+
+let currentSystem = 'sso';
+let nodeHistory = [];
+
+function setSystem(sys, tab) {
+  document.querySelectorAll('.sys-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentSystem = sys;
+  nodeHistory = [];
+  renderNode(TREES[sys].start);
+  updateHistory();
+}
+
+function renderNode(nodeId) {
+  const tree = TREES[currentSystem];
+  const node = tree.nodes[nodeId];
+  if (!node) return;
+
+  let html = `<div class="node ${node.type}">
+    <div class="node-type">${node.type === 'question' ? '? QUESTION' : node.type === 'fix' ? '✓ FIX' : node.type === 'escalate' ? '↑ ESCALATE' : 'ℹ INFO'}</div>
+    <div class="node-text">${node.text}</div>
+    <div class="node-detail">${node.detail}</div>
+    ${node.fix ? `<div class="node-cmd">${node.fix}</div>` : ''}`;
+
+  if (node.type === 'question' && node.yes && node.no) {
+    html += `<div class="branch-btns">
+      <button class="branch-btn yes" onclick="navigate('${nodeId}','yes')">YES →</button>
+      <button class="branch-btn no" onclick="navigate('${nodeId}','no')">NO →</button>
+    </div>`;
+  } else if (node.type !== 'question') {
+    html += `<div class="branch-btns">
+      <button class="branch-btn" onclick="restartTree()">↺ Start Over</button>
+    </div>`;
+  }
+
+  html += '</div>';
+  document.getElementById('tree-display').innerHTML = html;
+}
+
+function navigate(fromId, direction) {
+  const node = TREES[currentSystem].nodes[fromId];
+  const nextId = direction === 'yes' ? node.yes : node.no;
+  if (!nextId) return;
+  nodeHistory.push(fromId);
+  renderNode(nextId);
+  updateHistory();
+}
+
+function restartTree() {
+  nodeHistory = [];
+  renderNode(TREES[currentSystem].start);
+  updateHistory();
+}
+
+function updateHistory() {
+  const h = document.getElementById('tree-history');
+  if (nodeHistory.length === 0) { h.innerHTML = ''; return; }
+  let html = '<span style="color:var(--muted)">Path: </span>';
+  html += nodeHistory.map((id, i) => {
+    const node = TREES[currentSystem].nodes[id];
+    return `<span class="history-crumb" onclick="jumpTo(${i})">${node.text.substring(0,30)}${node.text.length>30?'...':''}</span>`;
+  }).join(' → ');
+  html += ` <button onclick="restartTree()" style="background:none;border:none;color:var(--red);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;margin-left:8px">↺ restart</button>`;
+  h.innerHTML = html;
+}
+
+function jumpTo(idx) {
+  nodeHistory = nodeHistory.slice(0, idx);
+  const nodeId = idx === 0 ? TREES[currentSystem].start : TREES[currentSystem].nodes[nodeHistory[idx-1]][Object.keys(TREES[currentSystem].nodes[nodeHistory[idx-1]]).includes('yes') ? 'yes' : 'no'];
+  renderNode(TREES[currentSystem].nodes[nodeHistory[idx]] ? nodeHistory[idx] : TREES[currentSystem].start);
+  updateHistory();
+}
+
+// Init Tool 3
+renderNode(TREES['sso'].start);
+</script>
+</body>
+</html>
