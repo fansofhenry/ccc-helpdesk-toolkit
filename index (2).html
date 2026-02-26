@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCC Help Desk Toolkit — Henry Fan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #f7f6f3;
+  --white:    #ffffff;
+  --surface:  #f0ede8;
+  --border:   #e2ddd6;
+  --border2:  #cdc8bf;
+  --text:     #18160f;
+  --text2:    #4a4740;
+  --muted:    #9a9590;
+  --blue:     #1d4e8f;
+  --blue-lt:  #edf2fb;
+  --green:    #1a5c36;
+  --green-lt: #edf7f2;
+  --amber:    #7a4a08;
+  --amber-lt: #fdf5e6;
+  --red:      #8c1a1a;
+  --red-lt:   #fdf1f1;
+  --cyan:     #0c5a72;
+  --radius:   8px;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ───────────────────── */
+.topbar {
+  background: var(--blue);
+  color: #fff;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+.topbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+.topbar-brand span { opacity: 0.6; font-size: 0.85rem; margin-left: 0.7rem; font-family: 'DM Sans', sans-serif; font-weight: 400; }
+.topbar-right {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.5);
+}
+
+/* ── NAV TABS ──────────────────── */
+.nav-strip {
+  background: var(--white);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  padding: 0 2rem;
+  gap: 0;
+  position: sticky; top: 52px; z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.tab {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 0.85rem 1.3rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.tab:hover { color: var(--text2); }
+.tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.tab-icon { font-size: 1rem; }
+
+/* ── LAYOUT ────────────────────── */
+.wrap { max-width: 960px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+.panel { display: none; }
+.panel.active { display: block; animation: fadeUp 0.22s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+/* ── SECTION HEADINGS ──────────── */
+.pane-head { margin-bottom: 1.8rem; }
+.pane-head h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.6rem;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.01em;
+}
+.pane-head p { font-size: 0.88rem; color: var(--muted); max-width: 560px; }
+
+/* ── CARD ──────────────────────── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.card + .card { margin-top: 1.2rem; }
+
+/* ── BUTTONS ───────────────────── */
+.btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: #163d75; box-shadow: 0 3px 10px rgba(29,78,143,0.3); transform: translateY(-1px); }
+.btn-ghost { background: var(--surface); color: var(--text2); border: 1px solid var(--border2); }
+.btn-ghost:hover { background: var(--border); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-green:hover { filter: brightness(1.08); }
+.btn-row { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: center; }
+
+/* ────────────────────────────────────────
+   TOOL 1 — MAC ENROLLMENT CHECKLIST
+──────────────────────────────────────── */
+.checklist { padding: 1.4rem 1.6rem; }
+
+.phase-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  margin-top: 1.2rem;
+}
+.phase-label:first-child { margin-top: 0; }
+
+.chk {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 3px;
+  transition: background 0.1s;
+  border: 1px solid transparent;
+}
+.chk:hover { background: var(--surface); }
+.chk.pass { background: var(--green-lt); border-color: #b7e0cb; }
+.chk.fail { background: var(--red-lt);   border-color: #f0c0c0; }
+
+.chk-box {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border2);
+  border-radius: 3px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  margin-top: 1px;
+  transition: all 0.12s;
+}
+.chk.pass .chk-box { background: var(--green); border-color: var(--green); color: #fff; }
+.chk.fail .chk-box { background: var(--red);   border-color: var(--red);   color: #fff; }
+
+.chk-body { flex: 1; }
+.chk-label { font-weight: 500; font-size: 0.88rem; margin-bottom: 2px; }
+.chk-detail { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+.chk-cmd {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--surface);
+  color: var(--cyan);
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-top: 4px;
+  display: inline-block;
+  border: 1px solid var(--border);
+}
+.chk-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.chk.pass .chk-badge { color: var(--green); }
+.chk.fail .chk-badge { color: var(--red); }
+
+/* Report fields */
+.rpt-fields {
+  padding: 1rem 1.6rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.rpt-field {
+  background: var(--white);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  outline: none;
+  flex: 1;
+  min-width: 130px;
+  transition: border-color 0.15s;
+}
+.rpt-field:focus { border-color: var(--blue); }
+.rpt-field::placeholder { color: var(--muted); }
+
+.report-bar {
+  padding: 0.9rem 1.6rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+.score-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.score-text b { color: var(--text); }
+
+.report-out {
+  margin: 0 1.6rem 1.4rem;
+  background: #1a1a1a;
+  color: #d4f5c0;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  line-height: 1.85;
+  padding: 1.1rem 1.3rem;
+  border-radius: 5px;
+  white-space: pre-wrap;
+  display: none;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.report-out.visible { display: block; }
+
+/* ────────────────────────────────────────
+   TOOL 2 — TICKET ANALYZER
+──────────────────────────────────────── */
+.analyzer-body { padding: 1.4rem 1.6rem; }
+
+.field-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.45rem;
+  display: block;
+}
+.tarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  padding: 0.8rem 1rem;
+  resize: vertical;
+  min-height: 130px;
+  outline: none;
+  line-height: 1.7;
+  transition: border-color 0.15s;
+}
+.tarea:focus { border-color: var(--blue); background: var(--white); }
+.tarea::placeholder { color: var(--muted); }
+.sample-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3px 0;
+  text-decoration: underline;
+  margin-top: 5px;
+  display: inline-block;
+}
+
+/* stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1.4rem 0;
+}
+@media(max-width:580px){ .stats-grid{ grid-template-columns: 1fr 1fr; } }
+.stat {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+.stat-n {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.stat-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.stat.c-blue .stat-n  { color: var(--blue); }
+.stat.c-green .stat-n { color: var(--green); }
+.stat.c-amber .stat-n { color: var(--amber); }
+.stat.c-red .stat-n   { color: var(--red); }
+
+/* bar chart */
+.chart-area { padding: 1.4rem 1.6rem; border-top: 1px solid var(--border); }
+.chart-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.9rem;
+}
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.bar-row:last-child { border-bottom: none; }
+.bar-cat { font-size: 0.82rem; color: var(--text2); width: 168px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 7px; background: var(--surface); border-radius: 4px; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.bar-n   { font-family: 'DM Mono', monospace; font-size: 0.75rem; font-weight: 500; width: 26px; text-align: right; flex-shrink: 0; }
+.bar-pct { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); width: 32px; text-align: right; flex-shrink: 0; }
+
+/* insight */
+.insight {
+  margin: 1.4rem 1.6rem 1.6rem;
+  background: var(--blue-lt);
+  border: 1px solid #c5d8f5;
+  border-left: 4px solid var(--blue);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.1rem 1.3rem;
+}
+.insight-hd {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 0.6rem;
+}
+.insight ul { list-style: none; font-size: 0.84rem; color: var(--text2); line-height: 1.9; }
+.insight ul li::before { content: '→ '; color: var(--blue); font-weight: 600; }
+.insight .so-what {
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid #c5d8f5;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--blue);
+}
+
+/* ────────────────────────────────────────
+   TOOL 3 — TRIAGE GUIDE
+──────────────────────────────────────── */
+.triage-wrap {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+@media(max-width:640px){ .triage-wrap { grid-template-columns: 1fr; } }
+
+.triage-sidebar { position: sticky; top: 108px; }
+.sidebar-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+  padding: 0 0.3rem;
+}
+.sys-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: var(--white);
+  cursor: pointer;
+  margin-bottom: 0.4rem;
+  transition: all 0.12s;
+  text-align: left;
+}
+.sys-btn:hover { border-color: var(--blue); background: var(--blue-lt); }
+.sys-btn.active { background: var(--blue); border-color: var(--blue); }
+.sys-btn-ico { font-size: 1rem; flex-shrink: 0; }
+.sys-btn-name { font-size: 0.83rem; font-weight: 600; color: var(--text); line-height: 1.2; }
+.sys-btn.active .sys-btn-name { color: #fff; }
+.sys-btn-sub { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); }
+.sys-btn.active .sys-btn-sub { color: rgba(255,255,255,0.6); }
+
+.triage-body {}
+
+.ctx-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 0.9rem;
+}
+.ctx-title { font-family: 'DM Serif Display', serif; font-size: 1.1rem; margin-bottom: 0.3rem; }
+.ctx-sub { font-size: 0.82rem; color: var(--text2); font-style: italic; }
+
+.breadcrumb {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.bc { cursor: pointer; text-decoration: underline; }
+.bc:hover { color: var(--blue); }
+
+.node {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.node-stripe { height: 4px; }
+.node-stripe.question { background: var(--blue); }
+.node-stripe.fix      { background: var(--green); }
+.node-stripe.escalate { background: var(--red); }
+.node-stripe.info     { background: var(--amber); }
+
+.node-inner { padding: 1.2rem 1.5rem 1.4rem; }
+.node-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+.node-eyebrow.question { color: var(--blue); }
+.node-eyebrow.fix      { color: var(--green); }
+.node-eyebrow.escalate { color: var(--red); }
+.node-eyebrow.info     { color: var(--amber); }
+.node-q { font-size: 1rem; font-weight: 600; margin-bottom: 0.55rem; line-height: 1.4; }
+.node-why {
+  background: var(--surface);
+  border-left: 3px solid var(--border2);
+  padding: 0.5rem 0.8rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 0.7rem;
+  line-height: 1.5;
+}
+.node-explain { font-size: 0.84rem; color: var(--text2); line-height: 1.7; margin-bottom: 0.7rem; }
+.node-cmd {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--cyan);
+  padding: 5px 10px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 0.9rem;
+}
+
+.btn-row-node { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.node-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 7px 18px;
+  border-radius: 5px;
+  border: 2px solid;
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.node-btn.yes    { border-color: var(--green); color: var(--green); }
+.node-btn.yes:hover { background: var(--green); color: #fff; }
+.node-btn.no     { border-color: var(--red); color: var(--red); }
+.node-btn.no:hover  { background: var(--red); color: #fff; }
+.node-btn.reset  { border-color: var(--border2); color: var(--muted); }
+.node-btn.reset:hover { border-color: var(--text2); color: var(--text2); }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">Help Desk Toolkit <span>Built by Henry Fan for Foothill–De Anza ETS</span></div>
+  <div class="topbar-right">fansofhenry.github.io</div>
+</div>
+
+<!-- TABS -->
+<div class="nav-strip">
+  <div class="tab active" onclick="switchTab('t3',this)">
+    <span class="tab-icon">🔀</span> Walk Me Through Fixing This
+  </div>
+  <div class="tab" onclick="switchTab('t2',this)">
+    <span class="tab-icon">📊</span> Find What's Causing the Most Problems
+  </div>
+  <div class="tab" onclick="switchTab('t1',this)">
+    <span class="tab-icon">☑</span> Mac Setup Checklist
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ═══════════════════════
+     TAB 1: ENROLLMENT
+════════════════════════ -->
+<div class="panel" id="t1">
+  <div class="pane-head">
+    <h2>New Mac Setup Checklist</h2>
+    <p>When a new Mac arrives or won't connect to district systems, work through this list. Click each item <strong>Pass ✓</strong> or <strong>Fail ✗</strong> as you go. When you're done, hit <em>Generate Report</em> — it creates a ready-to-send summary you can paste directly into your ticketing system.</p>
+  </div>
+
+  <div class="card">
+    <div class="checklist">
+
+      <div class="phase-label">Step 1 — Check the Mac itself</div>
+
+      <div class="chk" onclick="cycleChk(this)" data-label="Self Service app present in /Applications" data-detail="If missing, enrollment never completed" data-cmd="ls /Applications | grep 'Self Service'">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">District app store ("Self Service") is installed</div>
+          <div class="chk-detail">Look in the Applications folder. If it's not there, the Mac was never set up for district use.</div>
+          <div class="chk-cmd">ls /Applications | grep 'Self Service'</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this)" data-label="District management profile in System Settings" data-detail="No district profile = unmanaged device">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">District management profile shows up in System Settings</div>
+          <div class="chk-detail">Go to System Settings → Privacy & Security → Profiles. The district profile should be listed. If it's not there, this Mac isn't connected to district management.</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this)" data-label="Jamf binary installed" data-detail="If absent, device was never enrolled or was wiped" data-cmd="which jamf">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Management software is installed on the Mac</div>
+          <div class="chk-detail">The district uses Jamf to manage Macs. If this isn't installed, the device was never enrolled — or was wiped and needs to be set up again.</div>
+          <div class="chk-cmd">which jamf</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this)" data-label="Mac registered to district in Apple School Manager" data-detail="Verify device is assigned to FHDA in ASM" data-cmd="system_profiler SPHardwareDataType | grep Serial">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">This Mac is registered to the district in Apple's system</div>
+          <div class="chk-detail">Every district Mac must be registered in Apple School Manager. Check that this device's serial number is assigned to Foothill-De Anza.</div>
+          <div class="chk-cmd">system_profiler SPHardwareDataType | grep Serial</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="phase-label">Step 2 — Check that it can reach district servers</div>
+
+      <div class="chk" onclick="cycleChk(this)" data-label="Device can reach Jamf Pro server" data-detail="Replace with district Jamf URL" data-cmd="ping -c 3 [your-jamf-server]">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Mac can communicate with district servers</div>
+          <div class="chk-detail">The Mac needs to "check in" with the district's management server. If it can't reach it, software and settings won't deploy.</div>
+          <div class="chk-cmd">ping -c 3 [your-jamf-server]</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this)" data-label="Port 443 open to Jamf server" data-detail="Blocked HTTPS port = enrollment stall" data-cmd="nc -zv [jamf-server] 443">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Network is allowing secure connections (port 443)</div>
+          <div class="chk-detail">Management traffic uses HTTPS. If this is blocked — by a firewall or guest network — the setup process will silently stall with no error message.</div>
+          <div class="chk-cmd">nc -zv [jamf-server] 443</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this)" data-label="Mac can reach Apple's enrollment servers" data-detail="albert.apple.com must be reachable" data-cmd="curl -I https://albert.apple.com">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Mac can reach Apple's enrollment servers</div>
+          <div class="chk-detail">Apple has its own servers that handle device registration. The Mac must be able to reach them during setup, especially on a new network.</div>
+          <div class="chk-cmd">curl -I https://albert.apple.com</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="phase-label">Step 3 — If something failed above, try these fixes</div>
+
+      <div class="chk" onclick="cycleChk(this)" data-label="Attempted manual re-enroll" data-detail="If binary present but profile missing, try manual re-enroll first" data-cmd="sudo jamf enroll">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Tried re-connecting the Mac to district management</div>
+          <div class="chk-detail">If the management software is installed but the profile dropped off, a manual re-enrollment command often fixes it without a full reset.</div>
+          <div class="chk-cmd">sudo jamf enroll</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this)" data-label="Mac assigned to district in Apple School Manager portal" data-detail="Must be assigned before a reset will re-enroll correctly">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Confirmed the Mac is assigned to the district in Apple's portal</div>
+          <div class="chk-detail">Before a full reset will work, Apple needs to know this Mac belongs to the district. Check Apple School Manager and confirm it's assigned to Foothill-De Anza's management server.</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this)" data-label="Network drive mapped after enrollment" data-detail="Should auto-map via login script; if not, check AD binding and home drive path">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Shared network drives appear when the user logs in</div>
+          <div class="chk-detail">After a successful setup, the user's shared drives should appear automatically. If they don't, there's a secondary issue with how the account is configured in the district's directory.</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+    </div><!-- /checklist -->
+
+    <div class="rpt-fields">
+      <input type="text" class="rpt-field" id="rpt-device" placeholder="Device (serial / hostname)">
+      <input type="text" class="rpt-field" id="rpt-user"   placeholder="User name">
+      <input type="text" class="rpt-field" id="rpt-ticket" placeholder="Ticket #" style="max-width:110px">
+    </div>
+
+    <div id="enroll-report" class="report-out"></div>
+
+    <div class="report-bar">
+      <div class="score-text">Progress: <b id="chk-score">0 of 10 items checked</b></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetChklist()">Reset</button>
+        <button class="btn btn-primary" onclick="genReport()">Generate Report</button>
+        <button class="btn btn-green" id="copy-btn" style="display:none" onclick="copyReport()">Copy Report</button>
+      </div>
+    </div>
+  </div><!-- /card -->
+</div><!-- /t1 -->
+
+
+<!-- ═══════════════════════
+     TAB 2: TICKET ANALYZER
+════════════════════════ -->
+<div class="panel" id="t2">
+  <div class="pane-head">
+    <h2>What's Causing the Most Tickets?</h2>
+    <p>Paste a list of recent support requests — one per line — and this tool automatically groups them by type, shows which problems are happening most, and flags where a single fix could eliminate dozens of tickets. This is how a help desk stops reacting and starts preventing.</p>
+  </div>
+
+  <div class="card">
+    <div class="analyzer-body">
+      <label class="field-label">Paste support requests here — one per line</label>
+      <textarea class="tarea" id="tkt-input" placeholder="Canvas login failed&#10;Can't log into MyPortal&#10;Printer offline after update&#10;Banner won't open a form&#10;..."></textarea>
+      <button class="sample-btn" onclick="loadSample()">↓ Load example data to see how it works</button>
+
+      <div class="btn-row" style="margin-top:1rem">
+        <button class="btn btn-primary" onclick="analyze()">Show Me the Patterns</button>
+        <button class="btn btn-ghost"   onclick="clearA()">Clear</button>
+      </div>
+
+      <div id="a-stats" style="display:none">
+        <div class="stats-grid" id="stats-grid"></div>
+      </div>
+    </div>
+
+    <div id="a-chart" style="display:none">
+      <div class="chart-area">
+        <div class="chart-title">Where are the tickets coming from?</div>
+        <div id="chart-rows"></div>
+      </div>
+    </div>
+
+    <div id="a-insight" class="insight" style="display:none">
+      <div class="insight-hd">What to do about it</div>
+      <ul id="insight-list"></ul>
+      <div class="so-what" id="so-what"></div>
+    </div>
+  </div>
+</div><!-- /t2 -->
+
+
+<!-- ═══════════════════════
+     TAB 3: TRIAGE
+════════════════════════ -->
+<div class="panel active" id="t3">
+  <div class="pane-head">
+    <h2>Walk Me Through Fixing This</h2>
+    <p>Pick the system a user is having trouble with, then answer yes/no questions about what you're seeing. The tool walks you to either a specific fix or tells you exactly what information to gather before escalating — so nothing falls through the cracks.</p>
+  </div>
+
+  <div class="triage-wrap">
+    <div class="triage-sidebar">
+      <div class="sidebar-lbl">What system has the problem?</div>
+      <div class="sys-btn active" onclick="setSys('sso',this)">
+        <span class="sys-btn-ico">🔑</span>
+        <div><div class="sys-btn-name">Can't Log In</div><div class="sys-btn-sub">MyPortal, password issues</div></div>
+      </div>
+      <div class="sys-btn" onclick="setSys('canvas',this)">
+        <span class="sys-btn-ico">🎓</span>
+        <div><div class="sys-btn-name">Canvas / Course Issues</div><div class="sys-btn-sub">Missing course, can't access</div></div>
+      </div>
+      <div class="sys-btn" onclick="setSys('banner',this)">
+        <span class="sys-btn-ico">📋</span>
+        <div><div class="sys-btn-name">Banner / Admin Systems</div><div class="sys-btn-sub">Forms not loading, access denied</div></div>
+      </div>
+      <div class="sys-btn" onclick="setSys('jamf',this)">
+        <span class="sys-btn-ico">🍎</span>
+        <div><div class="sys-btn-name">Mac Not Working Right</div><div class="sys-btn-sub">Setup, software, district apps</div></div>
+      </div>
+      <div class="sys-btn" onclick="setSys('net',this)">
+        <span class="sys-btn-ico">🌐</span>
+        <div><div class="sys-btn-name">Internet / Network Problems</div><div class="sys-btn-sub">Slow, disconnecting, no access</div></div>
+      </div>
+    </div>
+
+    <div class="triage-body" id="triage-body"></div>
+  </div>
+</div><!-- /t3 -->
+
+</div><!-- /wrap -->
+
+<script>
+// ───── TAB SWITCHING ─────────────────────────────────────
+function switchTab(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ───── TOOL 1: CHECKLIST ─────────────────────────────────
+function cycleChk(el) {
+  const s = ['','pass','fail'];
+  const ic = ['','✓','✗'];
+  const lb = ['','PASS','FAIL'];
+  let i = s.indexOf(el.dataset.s || '');
+  i = (i + 1) % s.length;
+  el.dataset.s = s[i];
+  el.className = 'chk ' + s[i];
+  el.querySelector('.chk-box').textContent   = ic[i];
+  el.querySelector('.chk-badge').textContent = lb[i];
+  updateScore();
+}
+function updateScore() {
+  const all = document.querySelectorAll('.chk').length;
+  const done = document.querySelectorAll('.chk.pass,.chk.fail').length;
+  document.getElementById('chk-score').textContent = done + ' / ' + all;
+}
+function resetChklist() {
+  document.querySelectorAll('.chk').forEach(el => {
+    el.dataset.s = '';
+    el.className = 'chk';
+    el.querySelector('.chk-box').textContent   = '';
+    el.querySelector('.chk-badge').textContent = '';
+  });
+  document.getElementById('enroll-report').classList.remove('visible');
+  document.getElementById('copy-btn').style.display = 'none';
+  updateScore();
+}
+function genReport() {
+  const now = new Date();
+  const ts  = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+             +' '+now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  const dev    = document.getElementById('rpt-device').value || '[device not specified]';
+  const usr    = document.getElementById('rpt-user').value   || '[user not specified]';
+  const ticket = document.getElementById('rpt-ticket').value || '[no ticket #]';
+
+  let pass = [], fail = [], unc = [];
+  document.querySelectorAll('.chk').forEach(el => {
+    const lbl = el.dataset.label;
+    const s   = el.dataset.s || '';
+    if (s==='pass') pass.push('  ✓ '+lbl);
+    else if (s==='fail') fail.push('  ✗ '+lbl);
+    else unc.push('  — '+lbl);
+  });
+
+  const rec = fail.length > 0
+    ? 'RECOMMENDATION: Re-enrollment required. ' +
+      (fail.some(l=>l.includes('ADE')||l.includes('profile'))
+        ? 'Verify this Mac is assigned to FHDA in Apple School Manager, then wipe and re-run Setup Assistant.'
+        : 'Run sudo jamf enroll; if unsuccessful, escalate to Senior CSS with this report.')
+    : pass.length === document.querySelectorAll('.chk').length
+      ? 'RECOMMENDATION: All checks passed. Monitor for 30 min post-enrollment.'
+      : 'RECOMMENDATION: Diagnosis incomplete — continue checking remaining items.';
+
+  const txt = [
+    '═══════════════════════════════════════════',
+    '  MAC ENROLLMENT DIAGNOSTIC REPORT',
+    '═══════════════════════════════════════════',
+    '  Date/Time : '+ts,
+    '  Tech      : Henry Fan',
+    '  Device    : '+dev,
+    '  User      : '+usr,
+    '  Ticket #  : '+ticket,
+    '───────────────────────────────────────────',
+    '',
+    'PASSED ('+pass.length+'):',
+    ...(pass.length ? pass : ['  (none)']),
+    '',
+    'FAILED ('+fail.length+'):',
+    ...(fail.length ? fail : ['  (none)']),
+    '',
+    'UNCHECKED ('+unc.length+'):',
+    ...(unc.length ? unc : ['  (none)']),
+    '',
+    '───────────────────────────────────────────',
+    rec,
+    '═══════════════════════════════════════════',
+  ].join('\n');
+
+  const out = document.getElementById('enroll-report');
+  out.textContent = txt;
+  out.classList.add('visible');
+  document.getElementById('copy-btn').style.display = 'inline-block';
+  out.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function copyReport() {
+  navigator.clipboard.writeText(document.getElementById('enroll-report').textContent).then(() => {
+    const b = document.getElementById('copy-btn');
+    b.textContent = 'Copied!';
+    setTimeout(() => b.textContent='Copy Report', 1800);
+  });
+}
+
+// ───── TOOL 2: TICKET ANALYZER ───────────────────────────
+const SAMPLE_DATA = `Canvas login failed for student
+SSO loop on MyPortal after password reset
+Printer not found on Windows 11 after update
+Banner SPAIDEN form won't open
+Zoom won't launch on MacBook
+SSO infinite loop
+Canvas course not showing - just registered
+Projector no signal in room 4210
+Printer spooler stuck, jobs queued
+Banner access denied - financial aid form
+Canvas login error
+Network drive not mapped on new Mac
+Self Service app missing on MacBook
+Printer offline after IP change
+VDI session lagging from home
+SSO token expired - infinite redirect
+Canvas not in list - enrolled yesterday
+Banner keeps crashing on Chrome
+MFA locked out after new phone
+Printer scan to email broken
+Canvas password reset loop
+Zoom audio not working
+Banner security class error
+Printer driver mismatch after macOS update
+SSO failing with 401 error
+Mac won't enroll in Jamf
+Canvas course unpublished
+VDI profile not mounting
+Printer paper jam sensor error
+Banner VPN disconnecting remote staff`;
+
+const CATS = [
+  {n:'Login Problems',  k:['sso','login','saml','token','portal','myportal','okta','auth','password','mfa','locked','redirect','401'], c:'#1d4e8f'},
+  {n:'Canvas LMS',            k:['canvas','course','lms','enrolled','enroll','publish'],                                                      c:'#1a5c36'},
+  {n:'Banner ERP',            k:['banner','spaiden','financial aid','form','oracle','security class'],                                        c:'#7a4a08'},
+  {n:'Printer / Scanner',     k:['printer','print','scanner','scan','spooler','driver','paper jam','toner','copier'],                        c:'#8c1a1a'},
+  {n:'Mac Setup Issues',            k:['mac','macbook','jamf','self service','mdm','enrollment','apple','macos'],                                   c:'#4a1a8c'},
+  {n:'Network / VPN',         k:['network','vpn','drive','mapping','wifi','wired','globalprotect'],                                          c:'#0c5a72'},
+  {n:'Remote Desktop',          k:['vdi','virtual','horizon','session','remote desktop','blast','pcoip'],                                      c:'#3a6a0a'},
+  {n:'Video / Multimedia',    k:['zoom','projector','teams','video','hdmi','display','signal','audio','camera'],                             c:'#6a3a0a'},
+  {n:'Other',                 k:[],                                                                                                          c:'#9a9590'},
+];
+
+function loadSample() { document.getElementById('tkt-input').value = SAMPLE_DATA; }
+function clearA() {
+  document.getElementById('tkt-input').value = '';
+  ['a-stats','a-chart','a-insight'].forEach(id => document.getElementById(id).style.display='none');
+}
+
+function analyze() {
+  const lines = document.getElementById('tkt-input').value.trim().split('\n').map(l=>l.trim()).filter(Boolean);
+  if (!lines.length) return;
+
+  const counts = {};
+  CATS.forEach(c => counts[c.n] = 0);
+  lines.forEach(t => {
+    const low = t.toLowerCase();
+    let hit = false;
+    for (let i=0; i<CATS.length-1; i++) {
+      if (CATS[i].k.some(k => low.includes(k))) { counts[CATS[i].n]++; hit=true; break; }
+    }
+    if (!hit) counts['Other']++;
+  });
+
+  const sorted = Object.entries(counts).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  const total = lines.length;
+  const top = sorted[0];
+  const topPct = Math.round(top[1]/total*100);
+  const highVol = sorted.filter(([,v])=>v/total>=0.15);
+
+  // Stats
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat c-blue"><div class="stat-n">${total}</div><div class="stat-lbl">Total Tickets</div></div>
+    <div class="stat c-green"><div class="stat-n">${sorted.length}</div><div class="stat-lbl">Categories</div></div>
+    <div class="stat c-amber"><div class="stat-n">${topPct}%</div><div class="stat-lbl">Top: ${top[0]}</div></div>
+    <div class="stat c-red"><div class="stat-n">${highVol.length}</div><div class="stat-lbl">High-volume (>15%)</div></div>`;
+  document.getElementById('a-stats').style.display='block';
+
+  // Chart
+  let bars = '';
+  sorted.forEach(([name,count]) => {
+    const pct = Math.round(count/total*100);
+    const cat = CATS.find(c=>c.n===name);
+    const col = cat ? cat.c : '#9a9590';
+    bars += `<div class="bar-row">
+      <div class="bar-cat">${name}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col}"></div></div>
+      <div class="bar-n" style="color:${col}">${count}</div>
+      <div class="bar-pct">${pct}%</div>
+    </div>`;
+  });
+  document.getElementById('chart-rows').innerHTML = bars;
+  document.getElementById('a-chart').style.display='block';
+
+  // Insights
+  const items = [];
+  if (highVol.length) items.push(`<strong>High-volume signal:</strong> ${highVol.map(([n,v])=>`${n} (${Math.round(v/total*100)}%)`).join(', ')} — check for a systemic root cause before resolving tickets individually`);
+  if ((counts['Login Problems']||0)/total > 0.2) items.push(`Login/authentication tickets above 20% — check if there was a recent password policy change, or if the login system had a recent outage`);
+  if ((counts['Canvas LMS']||0)/total > 0.1) items.push(`Canvas volume elevated — verify Banner→Canvas sync status and recent enrollment propagation`);
+  if ((counts['Printer / Scanner']||0)/total > 0.1) items.push(`Printer volume elevated — check for a recent OS update or IP address change affecting print queues`);
+  const autoCands = sorted.filter(([n,v])=>v>=3&&['Login Problems','Printer / Scanner','Mac Setup Issues','Canvas LMS'].includes(n));
+  if (autoCands.length) items.push(`<strong>Worth creating a self-help guide for:</strong> ${autoCands.map(([n])=>n).join(', ')} — these come up often enough that a step-by-step guide could let users fix it themselves next time`);
+
+  document.getElementById('insight-list').innerHTML = items.map(i=>`<li>${i}</li>`).join('');
+  document.getElementById('so-what').textContent = `When a large chunk of your tickets come from the same root cause, the best use of time isn't answering the next ticket — it's fixing the thing that keeps generating them. One permanent fix beats dozens of individual responses.`;
+  document.getElementById('a-insight').style.display='block';
+  document.getElementById('a-insight').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ───── TOOL 3: TRIAGE TREES ──────────────────────────────
+const TREES = {
+  sso:{
+    label:'Can\'t Log In',ctx:'Most login problems aren\'t actually broken passwords — they\'re a stale browser session, a clock that\'s off, or a locked account. Start simple before escalating.',start:'q1',
+    nodes:{
+      q1:{t:'question',q:'Can the person open other websites (like Google)?',why:'If nothing works online, this isn\'t a login problem — it\'s a network problem. Different fix.',yes:'q2',no:'net'},
+      net:{t:'escalate',q:'This is a network problem, not a login problem',why:'The user has no internet at all. Switch to the Internet/Network Problems tab.',fix:null},
+      q2:{t:'question',q:'Does opening a Private/Incognito window fix it?',why:'This takes 10 seconds and fixes most login loop problems. It clears out old saved login data the browser has been reusing.',yes:'fix-cache',no:'q3'},
+      'fix-cache':{t:'fix',q:'Old browser data is causing the loop',e:'The browser was reusing saved login info that expired. Fix: clear the browser\'s cache and cookies (Chrome: Settings → Clear browsing data). Takes 30 seconds. Tell the user to try Incognito next time it happens — that\'s a quick self-check.',fix:'Chrome: Settings → Clear browsing data → All time → Cookies & cached files'},
+      q3:{t:'question',q:'Is the device\'s clock showing the right time?',why:'Login systems use timestamps to verify identity. If a device clock is more than 5 minutes off, logins silently fail — it looks like a wrong password but it\'s actually a time mismatch.',yes:'q4',no:'fix-clock'},
+      'fix-clock':{t:'fix',q:'The device clock is wrong — that\'s why login is failing',e:'This is one of the most commonly missed fixes. Syncing the clock takes 10 seconds and immediately resolves the login failure.',fix:'Windows: right-click the clock → Adjust date/time → Sync now    Mac: System Settings → Date & Time → Set automatically'},
+      q4:{t:'question',q:'Is the person\'s account locked in the district directory?',why:'After too many wrong password attempts, accounts get locked. The error message looks the same as a wrong password — you have to check.',yes:'fix-ad',no:'q5'},
+      'fix-ad':{t:'fix',q:'Account is locked — unlock it and you\'re done',e:'Go into Active Directory, find the account, and unlock it. Important: unlocking an account and resetting a password are two different things — make sure you\'re doing the right one, and write down which action you took.',fix:'Active Directory → right-click user → Unlock Account   (different from a password reset — document which you did)'},
+      q5:{t:'question',q:'Are multiple people having the same login problem at the same time?',why:'If it\'s just one person, it\'s that person\'s account. If it\'s many people at once, something bigger is broken — that needs to go to the infrastructure team.',yes:'esc-saml',no:'fix-single'},
+      'esc-saml':{t:'escalate',q:'This is a district-wide outage — escalate immediately',e:'Before calling anyone, check status.okta.com — it may already be a known issue. When you escalate, bring: how many people are affected, what time it started, the exact error message, and whether it\'s everywhere or just one building.',fix:'1. Check status.okta.com for known outages   2. Call infrastructure team with: # affected, start time, error message, location'},
+      'fix-single':{t:'fix',q:'Try a completely different browser first',e:'Cache is clear, clock is right, account is active — but still broken. Try a different browser entirely (if they were on Chrome, try Firefox). A browser update can sometimes break login flows silently. If that doesn\'t work, check the Okta admin logs for this specific user.',fix:'Try Firefox if they were using Chrome (or vice versa)   Then: Okta admin console → this user\'s activity log'},
+    }
+  },
+  canvas:{
+    label:'Canvas / Course Issues',ctx:'The most common call: "I registered but my class isn\'t in Canvas." Almost always this isn\'t a Canvas problem — it\'s a timing issue. Registration data takes a few hours to sync over.',start:'q1',
+    nodes:{
+      q1:{t:'question',q:'Can the person get into Canvas at all, or does login fail?',why:'If they can\'t even log in, that\'s a password/login problem — not a Canvas problem.',yes:'q2',no:'sso'},
+      sso:{t:'info',q:'The login itself is broken — that\'s a different problem',e:'Canvas uses the district\'s single sign-on. If login fails, it\'s not Canvas\'s fault. Switch to the "Can\'t Log In" tab.'},
+      q2:{t:'question',q:'Is the issue that a course is missing from their Canvas list?',why:'This is the most common Canvas call by far.',yes:'q3',no:'q6'},
+      q3:{t:'question',q:'Did they register for the class in the last 6 hours?',why:'Registration data from Banner takes 4–6 hours to show up in Canvas. A student who registered this morning might not see their course until this afternoon — that\'s normal, not a bug.',yes:'fix-wait',no:'q4'},
+      'fix-wait':{t:'fix',q:'Nothing is wrong — it just needs time to sync',e:'This is expected behavior, not an error. Tell the student to check Canvas again in a few hours. If the course still isn\'t there 24 hours after they registered, then escalate.',fix:'Tell student: "It takes 4–6 hours to appear. Check back this afternoon."   Still missing after 24 hrs? Escalate with their student ID and the course number.'},
+      q4:{t:'question',q:'Has the instructor published (turned on) the course?',why:'Instructors have to manually make their course visible to students. An unpublished course is invisible to students — but the instructor can still see it, which leads to confusing back-and-forth.',yes:'q5',no:'fix-pub'},
+      'fix-pub':{t:'fix',q:'The instructor hasn\'t turned the course on yet',e:'The course exists — it\'s just hidden from students. Contact the instructor and let them know they need to publish it in Canvas. ETS can\'t do this for them.',fix:'Contact the instructor: they need to click Publish in Canvas   (ETS cannot publish courses on an instructor\'s behalf)'},
+      q5:{t:'question',q:'Is the student looking at the right section — could there be a merged course?',why:'Sometimes multiple sections are merged into one. A student might be enrolled in Section 2 but the course only shows up under Section 1 in Canvas.',yes:'esc-canvas',no:'fix-cross'},
+      'fix-cross':{t:'fix',q:'The sections are merged — point them to the right one',e:'Ask the instructor which Canvas course is the active one. The student is registered but looking in the wrong place.',fix:'Ask the instructor: which Canvas course number should students use?'},
+      'esc-canvas':{t:'escalate',q:'Escalate — this needs a deeper investigation',e:'The student is enrolled, enough time has passed, the course is published, and they\'re looking in the right place — and it\'s still not there. Something is broken in the connection between Banner and Canvas.',fix:'Escalate with: student ID, course number (CRN), registration date, screenshot of their Canvas homepage'},
+      q6:{t:'question',q:'Is there a specific error message?',why:'Error messages narrow the problem significantly.',yes:'fix-err',no:'fix-browser'},
+      'fix-err':{t:'fix',q:'Document the error and check vendor status',e:'403 = enrollment/permissions issue. "Course Unavailable" = date restriction or term lock. Server error = check status.instructure.com before local troubleshooting.',fix:'status.instructure.com · 403 = verify enrollment · Date restriction = contact instructor'},
+      'fix-browser':{t:'fix',q:'Standard browser troubleshooting',e:'Clear cache → try Incognito → try a different browser. Canvas works best in Chrome or Firefox. If issue persists across browsers and devices, document and escalate.',fix:'Clear cache → Incognito → Different browser → document and escalate if still failing'},
+    }
+  },
+  banner:{
+    label:'Banner / Admin Systems',ctx:'The most common Banner call: a staff member can log in but can\'t access a specific form or page. 9 times out of 10, this is a permissions issue — their role doesn\'t include access to that page.',start:'q1',
+    nodes:{
+      q1:{t:'question',q:'Can the person log into Banner, or does it fail at the login screen?',why:'Can\'t log in at all vs. logged in but can\'t see something are two completely different problems.',yes:'q2',no:'qvpn'},
+      qvpn:{t:'question',q:'Are they working from home or off campus?',why:'Banner is only accessible from off campus if you\'re connected to the district\'s VPN. This is the most common reason remote staff can\'t get in.',yes:'fix-vpn',no:'qad'},
+      'fix-vpn':{t:'fix',q:'They need to connect to the district VPN first',e:'Banner is only accessible from off-campus when connected to the district\'s VPN (GlobalProtect). Connect to VPN and try again.',fix:'Connect to GlobalProtect VPN → try logging in again'},
+      qad:{t:'question',q:'Is the person\'s district account active and not locked?',why:'Banner uses the same district login credentials. If the account is locked, Banner login will fail.',yes:'esc-login',no:'fix-ad'},
+      'fix-ad':{t:'fix',q:'The district account needs to be unlocked or reset',e:'Unlock the account in Active Directory. If this is a new employee, also confirm their account was set up correctly with the right access levels for Banner.',fix:'Unlock account in Active Directory   New employee? Also confirm their Banner access level was set up'},
+      'esc-login':{t:'escalate',q:'Escalate — this needs a Banner admin',e:'VPN is on, account is active, and they still can\'t log in. This needs someone with Banner admin access to investigate.',fix:'Escalate with: their username, the exact error message, a screenshot, which browser they\'re using'},
+      q2:{t:'question',q:'They can log in fine, but a specific page or form is missing or says access denied?',why:'This is the most common Banner call. The person is in the system but their role doesn\'t include that particular page — it\'s a permissions setting.',yes:'fix-sec',no:'q3'},
+      'fix-sec':{t:'fix',q:'Their account doesn\'t have permission to see that page — that\'s the whole issue',e:'This isn\'t a computer problem or a browser problem. The person\'s job role in Banner simply doesn\'t include access to that page. A Banner admin needs to update their permissions.',fix:'Write down: which page they can\'t access + what their job role is → Send to Banner admin to fix'},
+      q3:{t:'question',q:'Is Banner crashing, freezing, or very slow?',why:'Usually a browser issue. Banner is picky about which browsers work.',yes:'fix-browser',no:'fix-gen'},
+      'fix-browser':{t:'fix',q:'Try Chrome or Firefox — the browser is probably the issue',e:'Banner doesn\'t work well with Safari, and sometimes breaks after browser updates. Switch to Chrome or Firefox and clear the cache.',fix:'Switch to Chrome or Firefox   Clear browser cache   Avoid Safari for Banner'},
+      'fix-gen':{t:'fix',q:'Log in as this person on a different computer',e:'This tells you where the problem lives. If the issue follows them to the other computer → it\'s their account. If the other computer works fine → it\'s something wrong with their original machine.',fix:'Works on other computer = something wrong with their specific machine   Broken on other computer too = account or permissions issue'},
+    }
+  },
+  jamf:{
+    label:'Mac Not Working Right',ctx:'Most Mac setup problems fall into one of three categories: the setup process never finished, it broke after a macOS update, or the Mac isn\'t registered to the district correctly in Apple\'s system.',start:'q1',
+    nodes:{
+      q1:{t:'question',q:'Is the district app store ("Self Service") installed on this Mac?',why:'Self Service is the district\'s app store for Macs. If it\'s there, setup probably completed. If it\'s not, setup never finished.',yes:'q2',no:'fix-enroll'},
+      'fix-enroll':{t:'fix',q:'The Mac was never fully set up for district use',e:'The setup process didn\'t complete. Try reconnecting it to district management with a command in Terminal. If that doesn\'t work, the Mac needs to be re-registered in Apple School Manager and then reset through the Setup Assistant.',fix:'Terminal: sudo jamf enroll   If that fails: check Apple School Manager → verify this Mac is assigned to FHDA → then do a full reset'},
+      q2:{t:'question',q:'Does the Mac show district management settings under System Settings → Profiles?',why:'These profiles are how the district controls and configures the Mac. After a big macOS update, they sometimes disappear.',yes:'q3',no:'fix-prof'},
+      'fix-prof':{t:'fix',q:'The district settings got wiped — probably after a macOS update',e:'The app store is there but the district settings dropped off. Run a re-enrollment command to push them back. If that doesn\'t work, the Jamf admin console can push a reconnect command remotely.',fix:'Terminal: sudo jamf enroll   If that fails: Jamf Pro console → find this Mac → Re-enroll device'},
+      q3:{t:'question',q:'Does Self Service show the expected district apps and software?',why:'If the profiles are there but nothing is showing up in Self Service, this Mac might not be in the right group to receive software.',yes:'q4',no:'fix-scope'},
+      'fix-scope':{t:'fix',q:'The Mac isn\'t in the right group to receive software',e:'In Jamf, devices are organized into groups that determine what software they get. This Mac might not be in the right group. Check Jamf Pro and run a manual check-in command.',fix:'Jamf Pro: check which group this Mac is in → verify the right software is assigned to that group   Terminal: sudo jamf policy (forces a check-in)'},
+      q4:{t:'question',q:'Do shared network drives appear automatically when the user logs in?',why:'After a proper setup, shared drives should appear on the desktop or in Finder without the user having to do anything.',yes:'resolved',no:'fix-drive'},
+      'fix-drive':{t:'fix',q:'Shared drives aren\'t appearing — check the account setup',e:'The Mac needs to be connected to the district\'s login directory (Active Directory) and the user\'s account needs a home drive path set up. Run a check-in command to push the settings again.',fix:'Terminal: dsconfigad -show (checks if Mac is joined to district directory)   Also: sudo jamf policy   If still broken: check the user\'s account in Active Directory for a home drive path'},
+      resolved:{t:'fix',q:'Everything looks good — dig into the logs if there\'s still an issue',e:'The Mac looks properly set up. If the user is still experiencing a specific problem, check the device\'s log in Jamf Pro for any recent errors, and run a record refresh.',fix:'Jamf Pro → find this Mac → check the log for recent errors   Terminal: sudo jamf recon (updates the inventory record)'},
+    }
+  },
+  net:{
+    label:'Internet / Network Problems',ctx:'Work from the simple to the complex. Start with the physical connection, then check if the device has an address, then check if it can reach the router, then check if it can reach the internet.',start:'q1',
+    nodes:{
+      q1:{t:'question',q:'Can the person open any website at all, or is everything broken?',why:'"One website is down" and "nothing works" are completely different problems.',yes:'q2',no:'qphy'},
+      qphy:{t:'question',q:'For a wired connection: is there a light on the port? For Wi-Fi: does it show connected?',why:'No light on the cable port means the physical connection is broken — cable, port, or network card. This is the quickest check.',yes:'qip',no:'fix-phy'},
+      'fix-phy':{t:'fix',q:'The physical connection is broken',e:'For a wired connection: try a different cable, then try a different wall port. For Wi-Fi: forget the network entirely and reconnect from scratch.',fix:'Wired: try different cable → try different wall port   Wi-Fi: forget the network → reconnect'},
+      qip:{t:'question',q:'Does the device have a real network address? (Run ipconfig — anything starting with 169.254 is a problem)',why:'When a device can\'t get a real address from the network, it assigns itself a fake one starting with 169.254. That fake address can\'t access anything.',yes:'qgw',no:'fix-dhcp'},
+      'fix-dhcp':{t:'fix',q:'The device has a fake address — the network isn\'t giving it a real one',e:'Try releasing and renewing the address. If the same problem affects multiple devices on the same port, escalate to the network team — the router or server that hands out addresses may be down.',fix:'Windows: ipconfig /release then ipconfig /renew   If multiple devices have the same problem → escalate to network team'},
+      qgw:{t:'question',q:'Can the device communicate with the building\'s network router?',why:'Having an address is different from being able to use it. If the device can\'t reach the local router, it\'s isolated even though it has an address.',yes:'qdns',no:'fix-route'},
+      'fix-route':{t:'escalate',q:'The device can\'t reach the local router — escalate to the network team',e:'The device has an address but is cut off from the network. This is usually a misconfiguration in the building\'s network equipment — not something the help desk can fix.',fix:'Escalate to network team with: device\'s IP address, building name, room number, wired or Wi-Fi'},
+      qdns:{t:'question',q:'Can the device reach 8.8.8.8 but not google.com? (Tests whether name lookup is broken)',why:'If a device can reach an address like 8.8.8.8 but not a name like google.com, internet connectivity is fine — just the name lookup system is broken.',yes:'q2',no:'fix-dns'},
+      'fix-dns':{t:'fix',q:'Name lookup is broken — the connection itself is fine',e:'The internet works, but the system that translates website names into addresses is broken. Clear the name cache first. If that doesn\'t fix it, temporarily set it to use Google\'s name server (8.8.8.8) to confirm.',fix:'Windows: ipconfig /flushdns   Mac: sudo dscacheutil -flushcache   If still broken: set DNS server to 8.8.8.8 temporarily'},
+      q2:{t:'question',q:'Can they reach most websites but one specific app or site is broken?',why:'If everything else works but one thing doesn\'t, the network is fine — that particular app or site has an issue.',yes:'fix-app',no:'q3'},
+      'fix-app':{t:'fix',q:'That specific app or site is down — check their status page',e:'Before trying anything on the device, check if the service itself is having problems. Most websites have a status page. For district apps, check the ETS status page.',fix:'Check the vendor\'s status page first (Google: "[app name] status")   For Canvas: status.instructure.com   Document: exact error message, which browser, what time it started'},
+      q3:{t:'question',q:'Are multiple people in the same room or building having the same problem?',why:'Same problem, same location = building network equipment issue. That\'s the network team\'s job, not the help desk.',yes:'esc-net',no:'fix-single'},
+      'esc-net':{t:'escalate',q:'Infrastructure issue — escalate to network team',e:'Do not touch network equipment. Escalate with: affected floor/building, user count, start time, wired vs wireless, speed test results vs an unaffected machine.',fix:'Escalate: floor/building, user count, start time, wired vs wireless, speed test comparison'},
+      'fix-single':{t:'fix',q:'Just this one person is slow — check what\'s running on their device',e:'One person being slow while everyone else is fine usually means something is eating up their bandwidth or their device is working too hard.',fix:'Task Manager → Network column (what\'s using the connection?)   Remote worker? → run a speed test at fast.com   Does it only happen at certain times? → could be congestion, report the pattern'},
+    }
+  }
+};
+
+let curSys = 'sso';
+let history = [];
+
+function setSys(id, btn) {
+  document.querySelectorAll('.sys-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  curSys = id;
+  history = [];
+  render(TREES[id].start);
+}
+
+function render(nodeId) {
+  const sys  = TREES[curSys];
+  const node = sys.nodes[nodeId];
+  if (!node) return;
+
+  let html = '';
+
+  // breadcrumb
+  if (history.length) {
+    html += '<div class="breadcrumb"><span class="bc" onclick="goStart()">Start</span>';
+    history.forEach((id,i) => {
+      const n = sys.nodes[id];
+      html += ` → <span class="bc" onclick="goTo(${i})">${n.q.substring(0,40)}${n.q.length>40?'…':''}</span>`;
+    });
+    html += '</div>';
+  }
+
+  // context on first screen
+  if (!history.length) {
+    html += `<div class="ctx-card"><div class="ctx-title">${sys.label}</div><div class="ctx-sub">${sys.ctx}</div></div>`;
+  }
+
+  const typeLabel = {question:'Check',fix:'Resolution',escalate:'Escalate',info:'Note'};
+  html += `<div class="node">
+    <div class="node-stripe ${node.t}"></div>
+    <div class="node-inner">
+      <div class="node-eyebrow ${node.t}">${typeLabel[node.t]||node.t}</div>
+      <div class="node-q">${node.q}</div>`;
+  if (node.why)  html += `<div class="node-why">${node.why}</div>`;
+  if (node.e)    html += `<div class="node-explain">${node.e}</div>`;
+  if (node.fix)  html += `<div class="node-cmd">${node.fix}</div>`;
+
+  html += '<div class="btn-row-node">';
+  if (node.t === 'question' && node.yes && node.no) {
+    html += `<button class="node-btn yes" onclick="go('${nodeId}','yes')">Yes →</button>`;
+    html += `<button class="node-btn no"  onclick="go('${nodeId}','no')">No →</button>`;
+  } else {
+    html += `<button class="node-btn reset" onclick="goStart()">↺ Start over</button>`;
+  }
+  html += '</div></div></div>';
+
+  document.getElementById('triage-body').innerHTML = html;
+}
+
+function go(fromId, dir) {
+  const node = TREES[curSys].nodes[fromId];
+  const next = dir === 'yes' ? node.yes : node.no;
+  if (!next) return;
+  history.push(fromId);
+  render(next);
+}
+function goStart() { history = []; render(TREES[curSys].start); }
+function goTo(idx) {
+  const id = history[idx];
+  history = history.slice(0, idx);
+  render(id);
+}
+
+// init triage
+render(TREES['sso'].start);
+</script>
+</body>
+</html>
