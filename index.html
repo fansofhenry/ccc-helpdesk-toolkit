@@ -541,6 +541,35 @@ body {
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ── OS TOGGLE ─────────────────── */
+.os-toggle {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.8rem;
+  border: 1.5px solid var(--border2);
+  border-radius: 6px;
+  overflow: hidden;
+  width: fit-content;
+}
+.os-btn {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 24px;
+  border: none;
+  background: var(--white);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.os-btn + .os-btn { border-left: 1.5px solid var(--border2); }
+.os-btn:hover { background: var(--surface); color: var(--text2); }
+.os-btn.active { background: var(--blue); color: #fff; }
+.os-panel { display: none; }
+.os-panel.active { display: block; }
 </style>
 </head>
 <body>
@@ -560,27 +589,35 @@ body {
     <span class="tab-icon">📊</span> Find What's Causing the Most Problems
   </div>
   <div class="tab" onclick="switchTab('t1',this)">
-    <span class="tab-icon">☑</span> Mac Setup Checklist
+    <span class="tab-icon">☑</span> Device Setup Checklists
   </div>
 </div>
 
 <div class="wrap">
 
 <!-- ═══════════════════════
-     TAB 1: ENROLLMENT
+     TAB 1: DEVICE CHECKLISTS
 ════════════════════════ -->
 <div class="panel" id="t1">
   <div class="pane-head">
-    <h2>New Mac Setup Checklist</h2>
-    <p>When a new Mac arrives or won't connect to district systems, work through this list. Click each item <strong>Pass ✓</strong> or <strong>Fail ✗</strong> as you go. When you're done, hit <em>Generate Report</em> — it creates a ready-to-send summary you can paste directly into your ticketing system.</p>
+    <h2>Device Setup Checklists</h2>
+    <p>When a new device arrives or stops connecting to district systems, work through the appropriate checklist. Click each item <strong>Pass ✓</strong> or <strong>Fail ✗</strong> as you go, then hit <em>Generate Report</em> for a ready-to-send summary.</p>
   </div>
 
+  <!-- OS Toggle -->
+  <div class="os-toggle">
+    <button class="os-btn active" onclick="switchOS('mac', this)">🍎 Mac</button>
+    <button class="os-btn" onclick="switchOS('win', this)">🪟 Windows</button>
+  </div>
+
+  <!-- ── MAC CHECKLIST ── -->
+  <div class="os-panel active" id="os-mac">
   <div class="card">
     <div class="checklist">
 
       <div class="phase-label">Step 1 — Check the Mac itself</div>
 
-      <div class="chk" onclick="cycleChk(this)" data-label="Self Service app present in /Applications" data-detail="If missing, enrollment never completed" data-cmd="ls /Applications | grep 'Self Service'">
+      <div class="chk" onclick="cycleChk(this,'mac')" data-label="District app store (Self Service) is installed">
         <div class="chk-box"></div>
         <div class="chk-body">
           <div class="chk-label">District app store ("Self Service") is installed</div>
@@ -590,26 +627,26 @@ body {
         <div class="chk-badge"></div>
       </div>
 
-      <div class="chk" onclick="cycleChk(this)" data-label="District management profile in System Settings" data-detail="No district profile = unmanaged device">
+      <div class="chk" onclick="cycleChk(this,'mac')" data-label="District management profile in System Settings">
         <div class="chk-box"></div>
         <div class="chk-body">
           <div class="chk-label">District management profile shows up in System Settings</div>
-          <div class="chk-detail">Go to System Settings → Privacy & Security → Profiles. The district profile should be listed. If it's not there, this Mac isn't connected to district management.</div>
+          <div class="chk-detail">System Settings → Privacy & Security → Profiles. If no district profile is listed, this Mac isn't connected to district management.</div>
         </div>
         <div class="chk-badge"></div>
       </div>
 
-      <div class="chk" onclick="cycleChk(this)" data-label="Jamf binary installed" data-detail="If absent, device was never enrolled or was wiped" data-cmd="which jamf">
+      <div class="chk" onclick="cycleChk(this,'mac')" data-label="Management software (Jamf) is installed on the Mac">
         <div class="chk-box"></div>
         <div class="chk-body">
           <div class="chk-label">Management software is installed on the Mac</div>
-          <div class="chk-detail">The district uses Jamf to manage Macs. If this isn't installed, the device was never enrolled — or was wiped and needs to be set up again.</div>
+          <div class="chk-detail">The district uses Jamf to manage Macs. If it's missing, the device was never enrolled — or was wiped and needs to be set up again.</div>
           <div class="chk-cmd">which jamf</div>
         </div>
         <div class="chk-badge"></div>
       </div>
 
-      <div class="chk" onclick="cycleChk(this)" data-label="Mac registered to district in Apple School Manager" data-detail="Verify device is assigned to FHDA in ASM" data-cmd="system_profiler SPHardwareDataType | grep Serial">
+      <div class="chk" onclick="cycleChk(this,'mac')" data-label="Mac is registered to the district in Apple School Manager">
         <div class="chk-box"></div>
         <div class="chk-body">
           <div class="chk-label">This Mac is registered to the district in Apple's system</div>
@@ -621,7 +658,7 @@ body {
 
       <div class="phase-label">Step 2 — Check that it can reach district servers</div>
 
-      <div class="chk" onclick="cycleChk(this)" data-label="Device can reach Jamf Pro server" data-detail="Replace with district Jamf URL" data-cmd="ping -c 3 [your-jamf-server]">
+      <div class="chk" onclick="cycleChk(this,'mac')" data-label="Mac can communicate with district management servers">
         <div class="chk-box"></div>
         <div class="chk-body">
           <div class="chk-label">Mac can communicate with district servers</div>
@@ -631,7 +668,7 @@ body {
         <div class="chk-badge"></div>
       </div>
 
-      <div class="chk" onclick="cycleChk(this)" data-label="Port 443 open to Jamf server" data-detail="Blocked HTTPS port = enrollment stall" data-cmd="nc -zv [jamf-server] 443">
+      <div class="chk" onclick="cycleChk(this,'mac')" data-label="Network is allowing secure connections (port 443)">
         <div class="chk-box"></div>
         <div class="chk-body">
           <div class="chk-label">Network is allowing secure connections (port 443)</div>
@@ -641,7 +678,7 @@ body {
         <div class="chk-badge"></div>
       </div>
 
-      <div class="chk" onclick="cycleChk(this)" data-label="Mac can reach Apple's enrollment servers" data-detail="albert.apple.com must be reachable" data-cmd="curl -I https://albert.apple.com">
+      <div class="chk" onclick="cycleChk(this,'mac')" data-label="Mac can reach Apple's enrollment servers">
         <div class="chk-box"></div>
         <div class="chk-body">
           <div class="chk-label">Mac can reach Apple's enrollment servers</div>
@@ -653,7 +690,7 @@ body {
 
       <div class="phase-label">Step 3 — If something failed above, try these fixes</div>
 
-      <div class="chk" onclick="cycleChk(this)" data-label="Attempted manual re-enroll" data-detail="If binary present but profile missing, try manual re-enroll first" data-cmd="sudo jamf enroll">
+      <div class="chk" onclick="cycleChk(this,'mac')" data-label="Tried re-connecting the Mac to district management">
         <div class="chk-box"></div>
         <div class="chk-body">
           <div class="chk-label">Tried re-connecting the Mac to district management</div>
@@ -663,16 +700,16 @@ body {
         <div class="chk-badge"></div>
       </div>
 
-      <div class="chk" onclick="cycleChk(this)" data-label="Mac assigned to district in Apple School Manager portal" data-detail="Must be assigned before a reset will re-enroll correctly">
+      <div class="chk" onclick="cycleChk(this,'mac')" data-label="Confirmed the Mac is assigned to the district in Apple's portal">
         <div class="chk-box"></div>
         <div class="chk-body">
           <div class="chk-label">Confirmed the Mac is assigned to the district in Apple's portal</div>
-          <div class="chk-detail">Before a full reset will work, Apple needs to know this Mac belongs to the district. Check Apple School Manager and confirm it's assigned to Foothill-De Anza's management server.</div>
+          <div class="chk-detail">Before a full reset will work, Apple needs to know this Mac belongs to the district. Check Apple School Manager and confirm it's assigned to Foothill-De Anza.</div>
         </div>
         <div class="chk-badge"></div>
       </div>
 
-      <div class="chk" onclick="cycleChk(this)" data-label="Network drive mapped after enrollment" data-detail="Should auto-map via login script; if not, check AD binding and home drive path">
+      <div class="chk" onclick="cycleChk(this,'mac')" data-label="Shared network drives appear when the user logs in">
         <div class="chk-box"></div>
         <div class="chk-body">
           <div class="chk-label">Shared network drives appear when the user logs in</div>
@@ -692,14 +729,144 @@ body {
     <div id="enroll-report" class="report-out"></div>
 
     <div class="report-bar">
-      <div class="score-text">Progress: <b id="chk-score">0 of 10 items checked</b></div>
+      <div class="score-text">Progress: <b id="chk-score-mac">0 of 10 items checked</b></div>
       <div class="btn-row">
-        <button class="btn btn-ghost" onclick="resetChklist()">Reset</button>
-        <button class="btn btn-primary" onclick="genReport()">Generate Report</button>
-        <button class="btn btn-green" id="copy-btn" style="display:none" onclick="copyReport()">Copy Report</button>
+        <button class="btn btn-ghost" onclick="resetChklist('mac')">Reset</button>
+        <button class="btn btn-primary" onclick="genReport('mac')">Generate Report</button>
+        <button class="btn btn-green" id="copy-btn-mac" style="display:none" onclick="copyReport('mac')">Copy Report</button>
       </div>
     </div>
   </div><!-- /card -->
+  </div><!-- /os-mac -->
+
+  <!-- ── WINDOWS CHECKLIST ── -->
+  <div class="os-panel" id="os-win">
+  <div class="card">
+    <div class="checklist">
+
+      <div class="phase-label">Step 1 — Check the PC itself</div>
+
+      <div class="chk" onclick="cycleChk(this,'win')" data-label="Computer is joined to the district's network domain">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Computer is joined to the district's network domain</div>
+          <div class="chk-detail">Windows PCs must be "domain joined" to access district systems. Check: Settings → System → About → scroll to "Domain." It should show the district domain, not "Workgroup."</div>
+          <div class="chk-cmd">System → About → Domain (should not say "Workgroup")</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this,'win')" data-label="User can log in with their district account">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">User can log in with their district username and password</div>
+          <div class="chk-detail">District accounts follow the format: username@fhda.edu (or the district domain). If this doesn't work, the account may not exist yet or the PC isn't domain-joined.</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this,'win')" data-label="District management software (SCCM / Intune agent) is installed">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">District management software is installed and running</div>
+          <div class="chk-detail">The district uses management software to push software updates and settings. Check Control Panel → Programs for the management agent. If it's missing, software won't deploy automatically.</div>
+          <div class="chk-cmd">Control Panel → Programs → look for management agent</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this,'win')" data-label="Required district software is installed (Microsoft 365, antivirus, etc.)">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Required district software is installed (Microsoft 365, antivirus, etc.)</div>
+          <div class="chk-detail">A properly set-up PC should have all baseline software already installed. Check that Microsoft 365, antivirus, and any department-specific apps are present.</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this,'win')" data-label="Windows is fully up to date">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Windows is fully up to date</div>
+          <div class="chk-detail">Outdated Windows can cause software conflicts, security issues, and printer problems. Settings → Windows Update → Check for updates. Let it finish before handing off.</div>
+          <div class="chk-cmd">Settings → Windows Update → Check for updates</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="phase-label">Step 2 — Check network and account access</div>
+
+      <div class="chk" onclick="cycleChk(this,'win')" data-label="PC can reach district servers and internet">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">PC can reach district servers and the internet</div>
+          <div class="chk-detail">Open a browser and check that both district websites (MyPortal, Canvas) and external sites (Google) load. If district sites work but Google doesn't — or vice versa — note the difference.</div>
+          <div class="chk-cmd">Test: MyPortal login page + google.com</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this,'win')" data-label="Shared network drives map automatically on login">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Shared network drives appear automatically when the user logs in</div>
+          <div class="chk-detail">Mapped drives (H: drive, department shares, etc.) should appear in File Explorer without the user having to do anything. If they're missing, the Group Policy drive mapping may not have applied.</div>
+          <div class="chk-cmd">File Explorer → check for mapped drives (H:, S:, etc.)</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this,'win')" data-label="District printers are available and can print a test page">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">District printers are available and print correctly</div>
+          <div class="chk-detail">Printers should install automatically via Group Policy. Check Settings → Printers & scanners. If department printers are missing, the print policy may not have applied — try logging out and back in.</div>
+          <div class="chk-cmd">Settings → Printers & scanners → print a test page</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="phase-label">Step 3 — Final checks before handoff</div>
+
+      <div class="chk" onclick="cycleChk(this,'win')" data-label="User's email is set up and receiving messages in Outlook">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">Email is set up and working in Outlook</div>
+          <div class="chk-detail">Open Outlook and confirm the user's account is connected and receiving mail. If Outlook asks for a password repeatedly, the account credentials may need to be re-entered or the profile rebuilt.</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+      <div class="chk" onclick="cycleChk(this,'win')" data-label="User confirmed the setup and signed off">
+        <div class="chk-box"></div>
+        <div class="chk-body">
+          <div class="chk-label">User confirmed everything works and signed off on the setup</div>
+          <div class="chk-detail">Walk the user through logging in, opening their email, accessing a shared drive, and printing. Get verbal or written confirmation before closing the ticket.</div>
+        </div>
+        <div class="chk-badge"></div>
+      </div>
+
+    </div><!-- /checklist -->
+
+    <div class="rpt-fields">
+      <input type="text" class="rpt-field" id="rpt-device-win" placeholder="Device (hostname / asset tag)">
+      <input type="text" class="rpt-field" id="rpt-user-win"   placeholder="User name">
+      <input type="text" class="rpt-field" id="rpt-ticket-win" placeholder="Ticket #" style="max-width:110px">
+    </div>
+
+    <div id="win-report" class="report-out"></div>
+
+    <div class="report-bar">
+      <div class="score-text">Progress: <b id="chk-score-win">0 of 10 items checked</b></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetChklist('win')">Reset</button>
+        <button class="btn btn-primary" onclick="genReport('win')">Generate Report</button>
+        <button class="btn btn-green" id="copy-btn-win" style="display:none" onclick="copyReport('win')">Copy Report</button>
+      </div>
+    </div>
+  </div><!-- /card -->
+  </div><!-- /os-win -->
+
 </div><!-- /t1 -->
 
 
